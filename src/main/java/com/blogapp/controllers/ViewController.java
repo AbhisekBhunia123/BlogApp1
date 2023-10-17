@@ -53,9 +53,14 @@ public class ViewController {
 	
 	@RequestMapping(value = "/homefilter",method = RequestMethod.POST)
 	public String filter(Model model,@RequestParam("author") String author,@RequestParam("tag") String tag,@RequestParam("date") String date) {
-		System.out.println(author);
-		Set<Post> posts = postServices.filterPost(author, tag, date);
+		int pageSize = 10;
+		Page<Post> page = postServices.filterPost(author,tag,date, pageSize);
+		List<Post> posts = page.getContent();
+		model.addAttribute("currentPage",1);
+		model.addAttribute("totalPages",page.getTotalPages());
+		model.addAttribute("totalItems",page.getTotalElements());
 		model.addAttribute("posts",posts);
+		System.out.println(page.getTotalElements());
 		return "home";
 	}
 	

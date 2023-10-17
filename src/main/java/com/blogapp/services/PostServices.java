@@ -12,8 +12,10 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 import com.blogapp.entities.Post;
@@ -142,19 +144,33 @@ public class PostServices {
 		return draftedPost;
 	}
 	
-	public Set<Post> filterPost(String author,String tag,String date){
-		author = author.trim();
-		tag = tag.trim();
-		date = date.trim();
-		Set<Post> posts = new HashSet<Post>();
-		List<Tag> postFilterByTag = tagRepo.findByName(tag);
-		List<Post> postFilterByAuthor = postRepo.findByAuthor(author);
-		List<Post> postFilterByDate = postRepo.findByPublishedAt(date);
-		if(postFilterByTag.size() != 0) posts.addAll(postFilterByTag.get(0).getPosts());
-		posts.addAll(postFilterByAuthor);
-		posts.addAll(postFilterByDate);
-		System.out.println(posts);
-		return posts;
+	public Page<Post> filterPost(String author, String tag, String date,int pageSize) {
+		Pageable pageable = PageRequest.of(0, pageSize);
+	    author = author.trim();
+	    tag = tag.trim();
+	    date = date.trim();
+
+	    List<Tag> postFilterByTag = tagRepo.findByName(tag);
+	    List<Post> postFilterByAuthor = postRepo.findByAuthor(author);
+	    List<Post> postFilterByDate = postRepo.findByPublishedAt(date);
+
+	    Set<Post> posts = new HashSet<>();
+
+	    if (postFilterByTag.size() != 0) {
+	        posts.addAll(postFilterByTag.get(0).getPosts());
+	    }
+	    posts.addAll(postFilterByAuthor);
+	    posts.addAll(postFilterByDate);
+
+	    List<Post> resultList = new ArrayList<>(posts);
+	    
+	    // Apply pagination to the result
+	    int start = (int) pageable.getOffset();
+	    int end = Math.min((start + pageable.getPageSize()), resultList.size());
+	    
+	    Page<Post> pageResult = new PageImpl<>(resultList.subList(start, end), pageable, resultList.size());
+
+	    return pageResult;
 	}
 	
 	public Page<Post> searchPost(String searchText,int pageNo,int pageSize){
@@ -165,8 +181,14 @@ public class PostServices {
 	}
 	
 	public Page<Post> sortPost(int pageNo,int pageSize,String sortType){
-		Pageable pageble = PageRequest.of(pageNo-1, pageSize);
-		Page<Post> sortedPost = postRepo.sortPost(pageble,sortType);
+		PageRequest pageable = null;
+		if(sortType.equals("asc")) {
+			pageable = PageRequest.of(pageNo-1, pageSize, Sort.by(Sort.Direction.ASC, "publishedAt"));
+		}
+		else {
+			pageable = PageRequest.of(pageNo-1, pageSize, Sort.by(Sort.Direction.DESC, "publishedAt"));
+		}
+		Page<Post> sortedPost = postRepo.findAll(pageable);
 		return sortedPost;
 	}
 	

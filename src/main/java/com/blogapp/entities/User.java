@@ -21,7 +21,16 @@ public class User {
 	private String name;
 	private String email;
 	private String password;
+	private String role;
 	
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
+
 	@OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
 	private List<Post> posts;
 	
@@ -30,12 +39,15 @@ public class User {
 		// TODO Auto-generated constructor stub
 	}
 
-	public User(int id, String name, String email, String password, List<Post> posts) {
+
+
+	public User(int id, String name, String email, String password, String role, List<Post> posts) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.email = email;
 		this.password = password;
+		this.role = role;
 		this.posts = posts;
 	}
 
