@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Insert title here</title>
+	<!-- Bootstrap CSS -->
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+</head>
+
+<body>
+
+	<nav class="navbar navbar-expand-lg navbar-light bg-light" th:fragment="navbar(user)">
+		<div class="container-fluid">
+			<a class="navbar-brand" href="#">Navbar</a>
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+				data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+				aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+					<li class="nav-item">
+						<a class="nav-link active" aria-current="page" href="#">Home</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#">Link</a>
+					</li>
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+							data-bs-toggle="dropdown" aria-expanded="false">
+							Filter
+						</a>
+						<ul class="dropdown-menu bg-dark" aria-labelledby="navbarDropdown">
+							<div class="container">
+								<form action="/homefilter" method="post">
+									<div class="mb-3">
+										<label for="exampleInputPassword1" class="form-label text-light">Author</label>
+										<input type="text" class="form-control" id="exampleInputPassword1"
+											name="author">
+									</div>
+									<div class="mb-3">
+										<label for="exampleInputPassword1" class="form-label text-light">Date</label>
+										<input type="text" class="form-control" id="exampleInputPassword1" name="date">
+									</div>
+									<div class="mb-3">
+										<label for="exampleInputPassword1" class="form-label text-light">Tag</label>
+										<input type="text" class="form-control" id="exampleInputPassword1" name="tag">
+									</div>
+									<button class="btn btn-primary filterbtn">Filter</button>
+								</form>
+							</div>
+
+						</ul>
+					</li>
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+							data-bs-toggle="dropdown" aria-expanded="false">
+							Sort By Date
+						</a>
+						<ul class="dropdown-menu bg-dark" aria-labelledby="navbarDropdown">
+							<li>
+								<div class="container">
+									<form action="/sortpost" method="get">
+										<div class="form-check">
+											<input class="form-check-input" type="radio" name="sortValue"
+												id="flexRadioDefault1" value="asc" checked>
+											<label class="form-check-label text-light" for="flexRadioDefault1">
+												Sort By ASC
+											</label>
+										</div>
+										<div class="form-check">
+											<input class="form-check-input" type="radio" name="sortValue"
+												id="flexRadioDefault2" value="desc">
+											<label class="form-check-label text-light" for="flexRadioDefault2">
+												Sort By Desc
+											</label>
+										</div>
+										<button type="submit" class="btn btn-success filterbtn">Sort</button>
+									</form>
+								</div>
+
+							</li>
+
+						</ul>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" th:href="@{/publishedpost/{id}(id=${user.id})}"
+							th:if="${user}">WorkSpace</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" th:href="@{/post}"
+							th:if="${user}">Write</a>
+					</li>
+				</ul>
+				<form action="/blog" method="get" class="d-flex">
+					<input class="form-control me-2" type="text" placeholder="Search" aria-label="Search" name="search">
+					<button class="btn btn-outline-success" type="submit">Search</button>
+				</form>
+
+				<button class="btn btn-outline-primary registerBtn" data-bs-toggle="modal"
+					data-bs-target="#registerModal" th:if="${user == null}">Regiser</button>
+				<button class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#loginModal"
+					th:if="${user == null}">Login</button>
+			</div>
+		</div>
+	</nav>
+	<!-- Option 1: Bootstrap Bundle with Popper -->
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+		crossorigin="anonymous"></script>
+</body>
+
+</html>

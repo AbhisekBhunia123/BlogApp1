@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Insert title here</title>
+	<!-- Bootstrap CSS -->
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+</head>
+
+<body>
+	<div id="section" class="container mt-4">
+		<!--Modal section-->
+		<!-- Modal -->
+		<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">Comment</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<form action="/comment" method="post">
+							<div class="mb-3">
+								<input type="text" class="form-control" id="exampleInputEmail1"
+									aria-describedby="emailHelp" name="comment">
+								<input type="hidden" name="postId" th:value="${post.id}" />
+							</div>
+							<button type="submit" class="btn btn-primary">Submit</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="card mt-2">
+			<div class="card-header">
+				<p th:text="${post.author}"></p>
+				<p th:text="${post.createdAt}"></p>
+			</div>
+			<div class="card-body">
+				<h5 class="card-title" th:text="${post.title}"></h5>
+				<p class="card-text" th:text="${post.content}"></p>
+				<p data-bs-toggle="modal" data-bs-target="#exampleModal">Make a comment</p>
+				<p>
+					<button class="btn btn-primary" type="button" data-bs-toggle="collapse"
+						data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" th:text="${post.comments.size()+' Comments'}">
+					</button>
+				</p>
+				<div class="collapse" id="collapseExample" th:each="comment : ${post.comments}">
+					<div>
+						<span th:text="${comment.name+' | '+comment.email}"></span>
+						<p th:text="${comment.comment}"></p>
+						<hr>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+	<!-- Option 1: Bootstrap Bundle with Popper -->
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+		crossorigin="anonymous"></script>
+</body>
+
+</html>
