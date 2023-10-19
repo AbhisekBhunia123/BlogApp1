@@ -4,79 +4,301 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Insert title here</title>
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-		integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
-	<link rel="stylesheet" href="/style/navbar.css" />
-	<link rel="stylesheet" href="/style/account.css" />
+	<style>
+		/* Style for the navigation bar */
+		.nav {
+			width: 100%;
+			background-color: #000;
+			color: #fff;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			padding: 10px;
+			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+		}
+
+		/* Style for the Project Name */
+		.projectH {
+			font-size: 24px;
+		}
+
+		/* Style for the search input and button */
+		#searchInput {
+			width: 70%;
+			height: 40px;
+			padding: 10px;
+			padding-left: 20px;
+			border-radius: 30px;
+			margin-bottom: 10px;
+			margin-left: 15%;
+			border: none;
+			outline: none;
+			font-size: 20px;
+		}
+
+
+		/* Style for the filter and sort sections */
+		.filterDiv,
+		.sortDiv,
+		.searchDiv {
+			width: 70%;
+			background-color: #222;
+			color: #fff;
+			padding: 10px;
+			border-radius: 5px;
+			text-align: left;
+			margin-bottom: 10px;
+		}
+
+		.searchDiv {
+			background-color: #000;
+		}
+
+
+
+		/* Style for checkbox labels */
+		label {
+			display: block;
+			margin: 5px 0;
+		}
+
+		/* Style for date input and Apply Filter button */
+		input[type="date"] {
+			padding: 5px;
+			border: 1px solid #555;
+			border-radius: 5px;
+			margin-bottom: 10px;
+		}
+
+		/* Style for the Sort button */
+		.filterbtn {
+			background-color: #333;
+			color: #fff;
+			border: none;
+			padding: 10px 20px;
+			border-radius: 5px;
+			cursor: pointer;
+			transition: background-color 0.2s;
+		}
+
+		.filterbtn:hover {
+			background-color: #555;
+		}
+
+		/* Style for the Register and Login Div */
+		.RegisterAndLoginDiv,
+		.LogOutDiv {
+			/* You can add styles to these sections as needed */
+		}
+
+
+
+
+
+
+		/* Style for the container */
+		.container {
+			max-width: 800px;
+			margin: 0 auto;
+		}
+
+		/* Style for the card */
+		.card {
+			border: 1px solid #ddd;
+			border-radius: 5px;
+			background-color: #fff;
+			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+			margin-top: 10px;
+		}
+
+		/* Style for the card header */
+		.card-header {
+			background-color: #333;
+			color: #fff;
+			padding: 10px;
+			border-radius: 5px 5px 0 0;
+			text-align: center;
+		}
+
+		/* Style for the author and createdAt */
+		.card-header p {
+			font-size: 16px;
+			margin: 5px 0;
+		}
+
+		/* Style for the card body */
+		.card-body {
+			padding: 10px;
+		}
+
+		/* Style for the card title */
+		.card-title {
+			font-size: 24px;
+			font-weight: bold;
+			margin: 10px 0;
+		}
+
+		/* Style for the card content */
+		.card-text {
+			font-size: 16px;
+		}
+
+		/* Style for the comments section */
+		.collapse {
+			margin: 20px 0;
+		}
+
+		/* Style for comment name and email */
+		.collapse span {
+			font-size: 14px;
+			font-weight: bold;
+			margin: 5px 0;
+		}
+
+		/* Style for the comment content */
+		.collapse p {
+			font-size: 16px;
+			margin: 5px 0;
+		}
+
+		/* Style for post anchor link */
+		.postAnchor {
+			text-decoration: none;
+			color: inherit;
+			cursor: pointer;
+		}
+
+		/* Additional styles can be added as needed */
+
+
+		/* pagination style */
+		/* Style for the pagination container */
+		.container.p-4 {
+			display: flex;
+			justify-content: center;
+			margin-top: 20px;
+			/* Add some top margin for spacing */
+		}
+
+		/* Style for the pagination list */
+		.pagination {
+			list-style: none;
+			display: flex;
+			gap: 10px;
+		}
+
+		/* Style for the pagination items */
+		.page-item {
+			display: inline-block;
+		}
+
+		/* Style for the pagination links */
+		.page-link {
+			padding: 10px 15px;
+			border: 1px solid #ccc;
+			border-radius: 5px;
+			text-decoration: none;
+			color: #333;
+		}
+
+		/* Style for the disabled pagination links */
+		.page-item.disabled .page-link {
+			pointer-events: none;
+			background-color: #f0f0f0;
+			border: 1px solid #f0f0f0;
+			color: #ccc;
+		}
+
+		/* Style for the current page number */
+		.page-item.disabled .page-link {
+			font-weight: bold;
+		}
+
+		/* Hover effect for the pagination links */
+		.page-link:hover {
+			background-color: #f0f0f0;
+		}
+	</style>
 
 </head>
 
 <body>
-	<div class="container-fluid" th:insert="navbar::navbar(${null})"></div>
-	<!--registration modal-->
-	<div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="exampleModalLabel">Register Here</h5>
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-				</div>
-				<div class="modal-body">
-					<form action="/register" method="post">
-						<div class="mb-3">
-							<label for="exampleInputPassword1" class="form-label">Name</label>
-							<input type="text" class="form-control" id="exampleInputPassword1" name="name" />
-						</div>
-						<div class="mb-3">
-							<label for="exampleInputPassword1" class="form-label">Email</label>
-							<input type="text" class="form-control" id="exampleInputPassword1" name="email" />
-						</div>
-						<div class="mb-3">
-							<label for="exampleInputPassword1" class="form-label">Password</label>
-							<input type="text" class="form-control" id="exampleInputPassword1" name="password" />
-						</div>
-						<div>
-							<button type="submit" class="btn btn-success">Submit</button>
-						</div>
-					</form>
-				</div>
-			</div>
+	<!--<div class="container-fluid" th:insert="navbar::navbar(${null})"></div>-->
+
+	<!--new navbar code-->
+	<nav class="nav">
+		<div class="ProjectName">
+			<h1 class="projectH">This is My project</h1>
 		</div>
-	</div>
+		<div class="searchDiv">
+			<form action="/search">
+				<input type="hidden" name="pageNo" value="1" />
+				<input id="searchInput" type="text" name="search" />
+			</form>
 
-	<!--login modal-->
-	<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="exampleModalLabel">Login Here</h5>
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-				</div>
-				<div class="modal-body">
-					<form action="/login" method="post">
-						<div class="mb-3">
-							<label for="exampleInputPassword1" class="form-label">Email</label>
-							<input type="email" class="form-control" id="exampleInputPassword1" name="email">
-						</div>
-						<div class="mb-3">
-							<label for="exampleInputPassword1" class="form-label">Password</label>
-							<input type="password" class="form-control" id="exampleInputPassword1" name="password">
-						</div>
-						<div class="container text-center">
-							<button type="submit" class="btn btn-success">Submit</button>
-						</div>
-
-					</form>
-
-				</div>
-			</div>
 		</div>
-	</div>
-	<div class="container-fluid">
+		<div class="filterDiv">
+			<form action="/homefilter" method="post">
+				<input type="hidden" name="pageNo" value="1" />
+				<h2>Select Authors:</h2>
+				<div th:if="${authors != null}" th:each="author :${authors}">
+					<label>
+						<input type="checkbox" name="authors" th:value="${author}" th:text="${author}">
+						<br>
+					</label>
+				</div>
+
+				<h2>Select Tags:</h2>
+				<div th:if="${tags != null}" th:each="tag :${tags}">
+					<label>
+						<input type="checkbox" name="tags" th:value="${tag}" th:text="${tag}">
+						<br>
+					</label>
+				</div>
+
+				<h1>Select Date</h1>
+				<p>Start Date</p>
+				<input type="date" name="startDate" />
+				<p>End Date</p>
+				<input type="date" name="endDate" />
+				<br>
+				<br>
+				<input type="submit" value="Apply Filter">
+			</form>
+		</div>
+		<div class="sortDiv">
+			<form action="/sortpost" method="get">
+				<div class="form-check">
+					<input class="form-check-input" type="radio" name="sortValue" id="flexRadioDefault1" value="asc"
+						checked>
+					<label class="form-check-label text-light" for="flexRadioDefault1">
+						Sort By ASC
+					</label>
+				</div>
+				<div class="form-check">
+					<input class="form-check-input" type="radio" name="sortValue" id="flexRadioDefault2" value="desc">
+					<label class="form-check-label text-light" for="flexRadioDefault2">
+						Sort By Desc
+					</label>
+				</div>
+				<input type="hidden" name="pageNo" value="1" />
+				<button type="submit" class="btn btn-success filterbtn">Sort</button>
+			</form>
+		</div>
+		<div class="RegisterAndLoginDiv">
+
+		</div>
+		<div class="LogOutDiv">
+
+		</div>
+	</nav>
+	<!--new container code-->
+	<hr>
+	<div class="contentDiv">
 		<div th:each="post : ${posts}" class="container">
 			<a th:href="@{/account/blog/{id}(id=${post.id})}" class="postAnchor">
-				<div class="card mt-2">
+				<div class="card">
 					<div class="card-header">
 						<p th:text="${post.author}"></p>
 						<p th:text="${post.createdAt}"></p>
@@ -92,27 +314,80 @@
 				</div>
 			</a>
 		</div>
-		<div class="container p-4" style="display: flex;justify-content: center;">
-			<nav aria-label="Page navigation example">
-				<ul class="pagination">
-					<li class="page-item" th:if="${currentPage > 1}"><a class="page-link" th:href="@{'/page/'+ ${currentPage-1}}">Previous</a></li>
-					<li class="page-item disabled" th:if="${currentPage <= 1}"><a class="page-link" href="#">Previous</a></li>
-					<li class="page-item disabled"><a class="page-link" href="#" th:text="${currentPage}"></a></li>
-					<li class="page-item" th:if="${currentPage+1 <= totalPages}"><a class="page-link" th:href="@{'/page/'+ ${currentPage+1}}" th:text="${currentPage+1}"></a></li>
-					<li class="page-item" th:if="${currentPage+2 <= totalPages}"><a class="page-link" th:href="@{'/page/'+ ${currentPage+2}}" th:text="${currentPage+2}"></a></li>
-					<li class="page-item" th:if="${currentPage+3 <= totalPages}"><a class="page-link" th:href="@{'/page/'+ ${currentPage+3}}" th:text="${currentPage+3}"></a></li>
-					<li class="page-item" th:if="${currentPage < totalPages}"><a class="page-link" th:href="@{'/page/'+ ${currentPage+1}}">Next</a></li>
-					<li class="page-item disabled" th:if="${currentPage >= totalPages}"><a class="page-link" href="#">Next</a></li>
-				</ul>
-			</nav>
-		</div>
 
+	</div>
+	<div class="container p-4" style="display: flex;justify-content: center;" th:if="${searchPaging}">
+		<nav aria-label="Page navigation example">
+			<ul class="pagination">
+				<li class="page-item" th:if="${currentPage > 1}"><a class="page-link"
+						th:href="@{'/search?pageNo='+ ${currentPage-1} + '&search='+${searchText}}">Previous</a></li>
+				<li class="page-item disabled" th:if="${currentPage <= 1}"><a class="page-link" href="#">Previous</a>
+				</li>
+				<li class="page-item disabled"><a class="page-link" href="#" th:text="${currentPage}"></a></li>
+				<li class="page-item" th:if="${currentPage+1 <= totalPages}"><a class="page-link"
+						th:href="@{'/search?pageNo='+ ${currentPage+1}+'&search='+${searchText}}" th:text="${currentPage+1}"></a></li>
+				<li class="page-item" th:if="${currentPage+2 <= totalPages}"><a class="page-link"
+						th:href="@{'/search?pageNo='+ ${currentPage+2}+'&search='+${searchText}}" th:text="${currentPage+2}"></a></li>
+				<li class="page-item" th:if="${currentPage+3 <= totalPages}"><a class="page-link"
+						th:href="@{'/search?pageNo='+ ${currentPage+3}+'&search='+${searchText}}" th:text="${currentPage+3}"></a></li>
+				<li class="page-item" th:if="${currentPage < totalPages}"><a class="page-link"
+						th:href="@{'/search?pageNo='+ ${currentPage+1}+'&search='+${searchText}}">Next</a></li>
+				<li class="page-item disabled" th:if="${currentPage >= totalPages}"><a class="page-link"
+						href="#">Next</a></li>
+			</ul>
+		</nav>
+	</div>
+
+	
+	<!--search pagenation-->
+	<div class="container p-4" style="display: flex;justify-content: center;" th:if="${simplePaging}">
+		<nav aria-label="Page navigation example">
+			<ul class="pagination">
+				<li class="page-item" th:if="${currentPage > 1}"><a class="page-link"
+						th:href="@{'/page/'+ ${currentPage-1}}">Prev</a></li>
+				<li class="page-item disabled" th:if="${currentPage <= 1}"><a class="page-link" href="#">Prev</a>
+				</li>
+				<li class="page-item disabled"><a class="page-link" href="#" th:text="${currentPage}"></a></li>
+				<li class="page-item" th:if="${currentPage+1 <= totalPages}"><a class="page-link"
+						th:href="@{'/page/'+ ${currentPage+1}}" th:text="${currentPage+1}"></a></li>
+				<li class="page-item" th:if="${currentPage+2 <= totalPages}"><a class="page-link"
+						th:href="@{'/page/'+ ${currentPage+2}}" th:text="${currentPage+2}"></a></li>
+				<li class="page-item" th:if="${currentPage+3 <= totalPages}"><a class="page-link"
+						th:href="@{'/page/'+ ${currentPage+3}}" th:text="${currentPage+3}"></a></li>
+				<li class="page-item" th:if="${currentPage < totalPages}"><a class="page-link"
+						th:href="@{'/page/'+ ${currentPage+1}}">Next</a></li>
+				<li class="page-item disabled" th:if="${currentPage >= totalPages}"><a class="page-link"
+						href="#">Next</a></li>
+			</ul>
+		</nav>
+	</div>
+	
+	<!--sort Pagenation-->
+	<div class="container p-4" style="display: flex;justify-content: center;" th:if="${sortPaging}">
+		<nav aria-label="Page navigation example">
+			<ul class="pagination">
+				<li class="page-item" th:if="${currentPage > 1}"><a class="page-link"
+						th:href="@{'/sortpost?sortValue='+${sortType}+'&pageNo='+ ${currentPage-1}}">SortPrev</a></li>
+				<li class="page-item disabled" th:if="${currentPage <= 1}"><a class="page-link" href="#">SortPrev</a>
+				</li>
+				<li class="page-item disabled"><a class="page-link" href="#" th:text="${currentPage}"></a></li>
+				<li class="page-item" th:if="${currentPage+1 <= totalPages}"><a class="page-link"
+						th:href="@{'/sortpost?sortValue='+${sortType}+'&pageNo='+  ${currentPage+1}}" th:text="${currentPage+1}"></a></li>
+				<li class="page-item" th:if="${currentPage+2 <= totalPages}"><a class="page-link"
+						th:href="@{'/sortpost?sortValue='+${sortType}+'&pageNo='+  ${currentPage+2}}" th:text="${currentPage+2}"></a></li>
+				<li class="page-item" th:if="${currentPage+3 <= totalPages}"><a class="page-link"
+						th:href="@{'/sortpost?sortValue='+ ${sortType}+'&pageNo='+ ${currentPage+3}}" th:text="${currentPage+3}"></a></li>
+				<li class="page-item" th:if="${currentPage < totalPages}"><a class="page-link"
+						th:href="@{'/sortpost?sortValue='+${sortType}+'&pageNo='+  ${currentPage+1}}">Next</a></li>
+				<li class="page-item disabled" th:if="${currentPage >= totalPages}"><a class="page-link"
+						href="#">Next</a></li>
+			</ul>
+		</nav>
 	</div>
 
 
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-		integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-		crossorigin="anonymous"></script>
+
+
 </body>
 
 </html>

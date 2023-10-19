@@ -4,35 +4,99 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Insert title here</title>
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-		integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-	<link rel="stylesheet" href="/style/account.css" />
-	<link rel="stylesheet" href="/style/navbar.css" />
+	<style>
+		/* Style for the form container */
+		.container {
+			margin: 0 auto;
+			max-width: 800px;
+			padding: 10px;
+		}
+
+		/* Style for the form fields */
+		.postField {
+			width: 100%;
+			padding: 10px;
+			margin-bottom: 20px;
+			border: 1px solid #ccc;
+			border-radius: 5px;
+			font-size: 16px;
+		}
+
+		/* Style for the title field */
+		.title {
+			height: 50px;
+		}
+
+		/* Style for the content field */
+		#content {
+			height: 500px;
+		}
+
+		/* Style for the excerpt field */
+		#floatingTextarea2 {
+			height: 100px;
+		}
+
+		/* Style for the buttons */
+		.btn {
+			margin: 5px;
+			font-size: 16px;
+			padding: 10px 20px;
+			border-radius: 5px;
+			text-decoration: none;
+			cursor: pointer;
+		}
+
+		/* Style for button colors */
+		.btn-outline-success {
+			color: #28a745;
+			border: 1px solid #28a745;
+		}
+
+		.btn-outline-warning {
+			color: #ffc107;
+			border: 1px solid #ffc107;
+		}
+
+		.btn-warning {
+			background-color: #ffc107;
+			color: #fff;
+			border: none;
+		}
+
+		/* Style for the hidden input */
+		input[type="hidden"] {
+			display: none;
+		}
+	</style>
 </head>
 
 <body>
-	<div class="container-fluid" th:insert="navbar::navbar(${user})"></div>
 	<div class="container">
 		<div class="container mt-4">
 			<form>
 				<div class="mb-3">
-					<textarea type="text" class="form-control postField title" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Title"
-						name="title" style="height: 50px;" th:if="${post == null}"></textarea>
-					<textarea type="text" class="form-control postField title" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Title"
-						name="title" style="height: 50px;" th:if="${post != null}" th:value="${post.title}" th:text="${post.title}"></textarea>
+					<textarea type="text" class="form-control postField title" id="exampleInputEmail1"
+						aria-describedby="emailHelp" placeholder="Title" name="title" style="height: 50px;"
+						th:if="${post == null}"></textarea>
+					<textarea type="text" class="form-control postField title" id="exampleInputEmail1"
+						aria-describedby="emailHelp" placeholder="Title" name="title" style="height: 50px;"
+						th:if="${post != null}" th:value="${post.title}" th:text="${post.title}"></textarea>
 				</div>
 				<hr />
 				<div class="mb-3">
 					<textarea class="form-control postField" placeholder="Write your content here" id="content"
 						style="height: 500px" name="content" th:if="${post == null}"></textarea>
-						<textarea class="form-control postField" placeholder="Write your content here" id="content"
-						style="height: 500px" name="content" th:if="${post != null}" th:value="${post.content}" th:text="${post.content}"></textarea>
+					<textarea class="form-control postField" placeholder="Write your content here" id="content"
+						style="height: 500px" name="content" th:if="${post != null}" th:value="${post.content}"
+						th:text="${post.content}"></textarea>
 				</div>
 				<div class="mb-3">
 					<textarea class="form-control postField" placeholder="Give a excerpt here" id="floatingTextarea2"
 						style="height: 100px" name="excerpt" th:if="${post == null}"></textarea>
-											<textarea class="form-control postField" placeholder="Give a excerpt here" id="floatingTextarea2"
-						style="height: 100px" name="excerpt" th:if="${post != null}" th:value="${post.excerpt}" th:text="${post.excerpt}"></textarea>
+					<textarea class="form-control postField" placeholder="Give a excerpt here" id="floatingTextarea2"
+						style="height: 100px" name="excerpt" th:if="${post != null}" th:value="${post.excerpt}"
+						th:text="${post.excerpt}"></textarea>
 				</div>
 				<div class="container" th:if="${post == null}">
 					<button class="btn btn-outline-success" type="submit" formaction="/publishpost"
@@ -42,7 +106,8 @@
 				</div>
 				<input type="hidden" th:if="${post != null}" th:value="${post.id}" name="postId" />
 				<div class="container" th:if="${post != null}">
-					<button class="btn btn-warning" type="submit" formaction="/updateblog" formmethod="post">Save</button>
+					<button class="btn btn-warning" type="submit" formaction="/updateblog"
+						formmethod="post">Save</button>
 				</div>
 
 			</form>

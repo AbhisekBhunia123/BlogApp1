@@ -1,5 +1,6 @@
 package com.blogapp.services;
 
+import java.util.Date;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,14 +29,40 @@ public class CommentService {
 			c.setEmail("john@gmail.com");
 			c.setComment(comment);
 			c.setPost(post);
-			c.setCreatedAt("date");
-			c.setUpdatedAt("date");
+			c.setCreatedAt(new Date().toString());
+			c.setUpdatedAt(new Date().toString());
 			commentRepo.save(c);
 			isCommented = true;
 		}catch(Exception e) {
 			
 		}
 		return isCommented;
+	}
+	
+	public boolean updateComment(String comment,int commentId) {
+		boolean isUpdated = false;
+		try {
+			
+			Comment com = commentRepo.findById(commentId).get();
+			com.setComment(comment);
+			com.setUpdatedAt(new Date().toString());
+			commentRepo.save(com);
+			isUpdated = true;
+		}catch(Exception e) {
+			
+		}
+		return isUpdated;
+	}
+	
+	public boolean deleteComment(int commentId) {
+		boolean isDeleted = false;
+		try {
+			commentRepo.deleteById(commentId);
+			isDeleted = true;
+		}catch(Exception e) {
+			
+		}
+		return isDeleted;
 	}
 
 }

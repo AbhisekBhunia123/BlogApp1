@@ -4,17 +4,254 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Insert title here</title>
-	<!-- Bootstrap CSS -->
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-		integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-	<link rel="stylesheet" href="/style/account.css" />
+	<style>
+		/* Style for the navigation bar (vertical layout) */
+		nav {
+			background-color: #000;
+			color: #fff;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			padding: 10px;
+			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+		}
+
+		/* Style for the Project Name */
+		.ProjectName h1 {
+			font-size: 24px;
+			margin-bottom: 10px;
+		}
+
+		/* Style for the search input and button */
+		.searchDiv input[type="text"] {
+			width:70%;
+			padding-left: 20px;
+			padding: 5px;
+			border: 1px solid #555;
+			border-radius: 30px;
+			margin-bottom: 10px;
+			outline: none;
+			margin-left: 15%;
+			height:40px;
+			
+		}
+
+		/* Style for the filter and sort sections */
+		.filterDiv,
+		.sortDiv,.searchDiv{
+			width: 70%;
+			background-color: #222;
+			color: #fff;
+			padding: 10px;
+			border-radius: 5px;
+			text-align: left;
+			margin-bottom: 10px;
+		}
+		
+		.searchDiv{
+			background-color: #000;
+		}
+
+		/* Style for checkbox labels */
+		label {
+			display: block;
+			margin: 5px 0;
+		}
+
+		/* Style for date input and Apply Filter button */
+		input[type="date"] {
+			padding: 5px;
+			border: 1px solid #555;
+			border-radius: 5px;
+			margin-bottom: 10px;
+		}
+
+		/* Style for the Sort button */
+		.filterbtn {
+			background-color: #333;
+			color: #fff;
+			border: none;
+			padding: 10px 20px;
+			border-radius: 5px;
+			cursor: pointer;
+			transition: background-color 0.2s;
+			margin-bottom: 10px;
+		}
+
+		.filterbtn:hover {
+			background-color: #555;
+		}
+
+		/* Style for the Register and Login Div */
+		.RegisterAndLoginDiv,
+		.LogOutDiv {
+			/* You can add styles to these sections as needed */
+		}
+
+		/* Style for the "write" and "WorkSpace" links */
+		nav a {
+			color: #fff;
+			text-decoration: none;
+			margin-bottom: 10px;
+		}
+
+
+
+
+
+		/* Style for the container */
+		.container {
+			max-width: 800px;
+			margin: 0 auto;
+		}
+
+		/* Style for the card */
+		.card {
+			border: 1px solid #ddd;
+			border-radius: 5px;
+			background-color: #fff;
+			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+			margin-top: 10px;
+		}
+
+		/* Style for the card header */
+		.card-header {
+			background-color: #333;
+			color: #fff;
+			padding: 10px;
+			border-radius: 5px 5px 0 0;
+			text-align: center;
+		}
+
+		/* Style for the author and createdAt */
+		.card-header p {
+			font-size: 16px;
+			margin: 5px 0;
+		}
+
+		/* Style for the card body */
+		.card-body {
+			padding: 10px;
+		}
+
+		/* Style for the card title */
+		.card-title {
+			font-size: 24px;
+			font-weight: bold;
+			margin: 10px 0;
+		}
+
+		/* Style for the card content */
+		.card-text {
+			font-size: 16px;
+		}
+
+		/* Style for the comments section */
+		.collapse {
+			margin: 20px 0;
+		}
+
+		/* Style for comment name and email */
+		.collapse span {
+			font-size: 14px;
+			font-weight: bold;
+			margin: 5px 0;
+		}
+
+		/* Style for the comment content */
+		.collapse p {
+			font-size: 16px;
+			margin: 5px 0;
+		}
+
+		/* Style for post anchor link */
+		.postAnchor {
+			text-decoration: none;
+			color: inherit;
+			cursor: pointer;
+		}
+
+		/* Additional styles can be added as needed */
+	</style>
 </head>
 
 <body>
+	<nav>
+		<div class="ProjectName">
+			<h1>This is My project</h1>
+		</div>
+		<div class="searchDiv">
+			<form action="search">
+				<input type="hidden" name="pageNo" value="1" />
+				<input type="text" name="search" />
+			</form>
+
+		</div>
+		<div class="filterDiv">
+			<form action="/homefilter" method="post">
+				<input type="hidden" name="pageNo" value="1" />
+				<h2>Select Authors:</h2>
+				<div th:each="author :${authors}">
+					<label>
+						<input type="checkbox" name="authors" th:value="${author}" th:text="${author}">
+						<br>
+					</label>
+				</div>
+
+				<h2>Select Tags:</h2>
+				<div th:each="tag :${tags}">
+					<label>
+						<input type="checkbox" name="tags" th:value="${tag}" th:text="${tag}">
+						<br>
+					</label>
+				</div>
+
+				<h1>Select Date</h1>
+				<p>Start Date</p>
+				<input type="date" name="startDate" />
+				<p>End Date</p>
+				<input type="date" name="endDate" />
+				<br>
+				<br>
+				<input type="submit" value="Apply Filter">
+			</form>
+		</div>
+		<div class="sortDiv">
+			<form action="/sortpost" method="get">
+				<div class="form-check">
+					<input class="form-check-input" type="radio" name="sortValue" id="flexRadioDefault1" value="asc"
+						checked>
+					<label class="form-check-label text-light" for="flexRadioDefault1">
+						Sort By ASC
+					</label>
+				</div>
+				<div class="form-check">
+					<input class="form-check-input" type="radio" name="sortValue" id="flexRadioDefault2" value="desc">
+					<label class="form-check-label text-light" for="flexRadioDefault2">
+						Sort By Desc
+					</label>
+				</div>
+				<input type="hidden" name="pageNo" value="1" />
+				<button type="submit" class="btn btn-success filterbtn">Sort</button>
+			</form>
+		</div>
+		<div class="RegisterAndLoginDiv">
+
+		</div>
+		<div class="LogOutDiv">
+
+		</div>
+		<div>
+			<a href="/post">write</a>
+			<a th:href="@{/publishedpost/{id}(id=${user.id})}">WorkSpace</a>
+		</div>
+	</nav>
 	<div>
-		<div class="container-fluid" th:insert="navbar::navbar(${user})"></div>
+		<!--new navbar code-->
+
+		<hr>
 		<div id="section" class="mt-4">
-			<div th:each="post : ${publishedPost}" class="container">
+			<div th:each="post : ${posts}" class="container">
 				<a th:href="@{/account/blog/{id}(id=${post.id})}" class="postAnchor">
 					<div class="card mt-2">
 						<div class="card-header">
@@ -32,35 +269,9 @@
 					</div>
 				</a>
 			</div>
-
-			<div class="container p-4" style="display: flex;justify-content: center;">
-				<nav aria-label="Page navigation example">
-					<ul class="pagination">
-						<li class="page-item" th:if="${currentPage > 1}"><a class="page-link"
-								th:href="@{'/account/page/'+ ${currentPage-1}}">Previous</a></li>
-						<li class="page-item disabled" th:if="${currentPage <= 1}"><a class="page-link"
-								href="#">Previous</a></li>
-						<li class="page-item disabled"><a class="page-link" href="#" th:text="${currentPage}"></a></li>
-						<li class="page-item" th:if="${currentPage+1 <= totalPages}"><a class="page-link"
-								th:href="@{'/account/page/'+ ${currentPage+1}}" th:text="${currentPage+1}"></a></li>
-						<li class="page-item" th:if="${currentPage+2 <= totalPages}"><a class="page-link"
-								th:href="@{'/account/page/'+ ${currentPage+2}}" th:text="${currentPage+2}"></a></li>
-						<li class="page-item" th:if="${currentPage+3 <= totalPages}"><a class="page-link"
-								th:href="@{'/account/page/'+ ${currentPage+3}}" th:text="${currentPage+3}"></a></li>
-						<li class="page-item" th:if="${currentPage < totalPages}"><a class="page-link"
-								th:href="@{'/account/page/'+ ${currentPage+1}}">Next</a></li>
-						<li class="page-item disabled" th:if="${currentPage >= totalPages}"><a class="page-link"
-								href="#">Next</a></li>
-					</ul>
-				</nav>
-			</div>
 		</div>
 	</div>
 
-	<!-- Option 1: Bootstrap Bundle with Popper -->
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-		integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-		crossorigin="anonymous"></script>
 </body>
 
 </html>

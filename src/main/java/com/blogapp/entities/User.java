@@ -23,6 +23,18 @@ public class User {
 	private String password;
 	private String role;
 	
+	private int active = 1;
+	
+	
+	
+	public int getActive() {
+		return active;
+	}
+
+	public void setActive(int active) {
+		this.active = active;
+	}
+
 	public String getRole() {
 		return role;
 	}
@@ -41,13 +53,16 @@ public class User {
 
 
 
-	public User(int id, String name, String email, String password, String role, List<Post> posts) {
+	
+
+	public User(int id, String name, String email, String password, String role, int active, List<Post> posts) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.email = email;
 		this.password = password;
 		this.role = role;
+		this.active = active;
 		this.posts = posts;
 	}
 

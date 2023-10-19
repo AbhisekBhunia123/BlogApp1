@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.blogapp.entities.User;
 import com.blogapp.services.UserServices;
 
-import jakarta.servlet.http.HttpSession;
-
 @Controller
 public class UserController {
 	@Autowired
@@ -34,5 +32,6 @@ public class UserController {
 		}
 		return "redirect:/login";
 	}
+	
 	
 }

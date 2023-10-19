@@ -4,15 +4,132 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Insert title here</title>
-	<!-- Bootstrap CSS -->
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-		integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-	<link rel="stylesheet" href="/style/account.css" />
-	<link rel="stylesheet" href="/style/navbar.css" />
+	<style>
+		/* Style for the container */
+		.container {
+			max-width: 800px;
+			margin: 0 auto;
+		}
+
+		/* Style for the Publish and Draft buttons */
+		.text-center {
+			text-align: center;
+		}
+
+		.publishAndDraftBtn {
+			display: inline-block;
+			padding: 10px 20px;
+			background-color: #333;
+			color: #fff;
+			text-decoration: none;
+			border: none;
+			border-radius: 5px;
+			margin: 10px;
+			cursor: pointer;
+			transition: background-color 0.2s;
+		}
+
+		.publishAndDraftBtn:hover {
+			background-color: #555;
+			/* Highlight on hover */
+		}
+
+		/* Style for the card */
+		.card {
+			border: 1px solid #ddd;
+			border-radius: 5px;
+			background-color: #fff;
+			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+			margin-top: 10px;
+		}
+
+		/* Style for the card header */
+		.card-header {
+			background-color: #333;
+			color: #fff;
+			padding: 10px;
+			border-radius: 5px 5px 0 0;
+			text-align: center;
+		}
+
+		/* Style for the author and createdAt */
+		.card-header p {
+			font-size: 16px;
+			margin: 5px 0;
+		}
+
+		/* Style for the card body */
+		.card-body {
+			padding: 10px;
+		}
+
+		/* Style for the card title */
+		.card-title {
+			font-size: 24px;
+			font-weight: bold;
+			margin: 10px 0;
+		}
+
+		/* Style for the card content */
+		.card-text {
+			font-size: 16px;
+		}
+
+		/* Style for form elements */
+		form {
+			margin: 10px 0;
+		}
+
+		input[type="text"] {
+			width: 100%;
+			padding: 10px;
+			border: 1px solid #ddd;
+			border-radius: 5px;
+		}
+
+		button {
+			background-color: #333;
+			color: #fff;
+			border: none;
+			padding: 10px 20px;
+			border-radius: 5px;
+			cursor: pointer;
+			transition: background-color 0.2s;
+		}
+
+		button:hover {
+			background-color: #555;
+			/* Highlight on hover */
+		}
+
+		/* Style for the comments section */
+		.collapse {
+			margin: 20px 0;
+		}
+
+		/* Style for comment name and email */
+		.collapse span {
+			font-size: 14px;
+			font-weight: bold;
+			margin: 5px 0;
+		}
+
+		/* Style for the comment content */
+		.collapse p {
+			font-size: 16px;
+			margin: 5px 0;
+		}
+
+		hr {
+			border: 1px solid #ddd;
+			margin: 10px 0;
+		}
+
+		/* Additional styles can be added as needed */
+	</style>
 </head>
 
 <body>
-	<div class="container-fluid" th:insert="navbar::navbar(${user})"></div>
 	<div class="container">
 		<div class="container mt-4">
 			<div class="container text-center">
@@ -20,54 +137,6 @@
 				<a class="publishAndDraftBtn" th:href="@{/draftedpost/{id}(id=${user.id})}">Draft</a>
 			</div>
 			<div th:each="post:${posts}">
-				<!--Modal -->
-				<div class="modal fade" th:id="'exampleModal'+${post.id}" tabindex="-1"
-					aria-labelledby="exampleModalLabel" aria-hidden="true">
-					<div class="modal-dialog">
-						<div class="modal-content">
-							<div class="modal-header">
-								<h5 class="modal-title" id="exampleModalLabel">Tag</h5>
-								<button type="button" class="btn-close" data-bs-dismiss="modal"
-									aria-label="Close"></button>
-							</div>
-							<div class="modal-body">
-								<form action="/createtag" method="post">
-									<div class="mb-3">
-										<input type="text" class="form-control" aria-describedby="emailHelp"
-											name="name">
-									</div>
-									<input type="hidden" name="userId" th:value="${user.id}" />
-									<input type="hidden" name="postId" th:value="${post.id}" />
-									<button type="submit" class="btn btn-primary">Submit</button>
-								</form>
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<!-- Modal -->
-				<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-					aria-hidden="true">
-					<div class="modal-dialog">
-						<div class="modal-content">
-							<div class="modal-header">
-								<h5 class="modal-title" id="exampleModalLabel">Comment</h5>
-								<button type="button" class="btn-close" data-bs-dismiss="modal"
-									aria-label="Close"></button>
-							</div>
-							<div class="modal-body">
-								<form action="/comment" method="post">
-									<div class="mb-3">
-										<input type="text" class="form-control" id="exampleInputEmail1"
-											aria-describedby="emailHelp" name="comment">
-										<input type="hidden" name="postId" th:value="${post.id}" />
-									</div>
-									<button type="submit" class="btn btn-primary">Submit</button>
-								</form>
-							</div>
-						</div>
-					</div>
-				</div>
 
 				<div class="card mt-2">
 					<div class="card-header">
@@ -81,7 +150,31 @@
 							<p th:text="${tag.name}"></p>
 						</div>
 						<p data-bs-toggle="modal" data-bs-target="#exampleModal">Make a comment</p>
-						<p data-bs-toggle="modal" th:attr="data-bs-target='#exampleModal' + ${post.id}">Add To Tag</p>
+
+						<form action="/createtag" method="post">
+							<h1>Tag Name</h1>
+							<input type="text" name="name" />
+							<input type="hidden" name="postId" th:value="${post.id}" />
+							<input type="hidden" name="userId" th:value="${user.id}" />
+							<button type="submit">Add</button>
+						</form>
+						<form action="/updatetag" method="post">
+							<h1>Update Tag</h1>
+							<p>Updated Tag Name</p>
+							<input type="text" name="oldname" />
+							<p>New Tag Name</p>
+							<input type="text" name="newname" />
+							<input type="hidden" name="postId" th:value="${post.id}" />
+							<input type="hidden" name="userId" th:value="${user.id}" />
+							<button type="submit">Add</button>
+						</form>
+						<form action="/deltag" method="post">
+							<h1>Delete Tag</h1>
+							<input type="text" name="name" />
+							<input type="hidden" name="postId" th:value="${post.id}" />
+							<input type="hidden" name="userId" th:value="${user.id}" />
+							<button type="submit">Delete</button>
+						</form>
 						<form action="/publishdraftpost" method="post" th:if="${post.isPublished.equals('no')}">
 							<input type="hidden" name="postId" th:value="${post.id}" />
 							<input type="hidden" name="userId" th:value="${user.id}" />
@@ -95,12 +188,7 @@
 							<input type="hidden" name="postId" th:value="${post.id}" />
 							<button class="btn btn-danger mb-4" type="submit">Delete</button>
 						</form>
-						<p>
-							<button class="btn btn-primary" type="button" data-bs-toggle="collapse"
-								th:attr="data-bs-target='#comment' + ${post.id}" aria-expanded="false"
-								aria-controls="collapseExample" th:text="${post.comments.size()+' Comments'}">
-							</button>
-						</p>
+
 						<div class="collapse" th:id="${'comment'+post.id}" th:each="comment : ${post.comments}">
 							<div>
 								<span th:text="${comment.name+' | '+comment.email}"></span>
@@ -115,11 +203,6 @@
 
 		</div>
 	</div>
-
-	<!-- Option 1: Bootstrap Bundle with Popper -->
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-		integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-		crossorigin="anonymous"></script>
 </body>
 
 </html>

@@ -1,5 +1,6 @@
 package com.blogapp.repositories;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -13,6 +14,7 @@ import com.blogapp.entities.Post;
 
 public interface PostRepo extends JpaRepository<Post, Integer>{
 	
+	
 	public List<Post> findByIsPublished(String isPublished);
 	
 	public List<Post> findByIsPublishedAndUserId(String isPublished,int userId);
@@ -25,14 +27,71 @@ public interface PostRepo extends JpaRepository<Post, Integer>{
 	           "LOWER(p.title) LIKE LOWER(CONCAT('%', :searchTerm, '%')) " +
 	           "OR LOWER(p.author) LIKE LOWER(CONCAT('%', :searchTerm, '%')) " +
 	           "OR LOWER(p.content) LIKE LOWER(CONCAT('%', :searchTerm, '%'))")
-	public Page<Post> findFromSearch(Pageable pageble,@Param("searchTerm") String search);
+	public List<Post> findFromSearch(@Param("searchTerm") String search);
 	
-	@Query(value = "SELECT p FROM Post p ORDER BY p.created_at "
-            + "DESC :sortType",
-            countQuery = "SELECT COUNT(p) FROM Post p",
-            nativeQuery = true)
-	public Page<Post> sortPost(Pageable pageable,@Param("sortType") String sortType);
+	
+	
+	@Query("SELECT p FROM Post p WHERE p.isPublished = 'yes' AND (" +
+	           "LOWER(p.title) LIKE LOWER(CONCAT('%', :searchTerm, '%')) " +
+	           "OR LOWER(p.author) LIKE LOWER(CONCAT('%', :searchTerm, '%')) " +
+	           "OR LOWER(p.content) LIKE LOWER(CONCAT('%', :searchTerm, '%')))")
+	public Page<Post> findFromSearchPage(Pageable pageable,@Param("searchTerm") String search);
+	
+    Page<Post> findAllByOrderByCreatedAtAsc(Pageable pageable);
+
+    Page<Post> findAllByOrderByCreatedAtDesc(Pageable pageable);
 	
 	Page<Post> findByIsPublished(String published, Pageable pageable);
+	
+	@Query("SELECT p FROM Post p " +
+	           "WHERE (:authors IS NULL OR p.author IN :authors) " +
+	           "AND (:startDate IS NULL OR p.createdAt IN :startDate) " +
+	           "AND (:endDate IS NULL OR p.createdAt IN :endDate)")
+	    Page<Post> filterPost(@Param("authors") ArrayList<String> authors,
+	                         @Param("startDate") String startDate,
+	                         @Param("endDate") String endDate,Pageable pageable);
+	
+	Page<Post> findByAuthorInAndCreatedAtBetween(
+	        List<String> authors, String startDate, String endDate, Pageable pageable);
+	
+	Page<Post> findByAuthorIn(
+	        List<String> authors, Pageable pageable);
+	
+	Page<Post> findByCreatedAtBetween(String startDate, String endDate, Pageable pageable);
+	
+	
+	@Query("SELECT p FROM Post p " +
+	           "JOIN p.tags t " +
+	           "WHERE (:authors IS NULL OR p.author IN :authors) " +
+	           "AND (:tags IS NULL OR t.name IN :tags) " +
+	           "AND (:startDate IS NULL OR p.createdAt IN :startDate) " +
+	           "AND (:endDate IS NULL OR p.createdAt IN :endDate)")
+	    Page<Post> filterByAuthorTagAndCreatedAt(@Param("authors") List<String> authors, 
+	                           @Param("tags") List<String> tags, 
+	                           @Param("startDate") String startDate, 
+	                           @Param("endDate") String endDate, 
+	                           Pageable pageable);
+	
+	@Query("SELECT p FROM Post p " +
+	           "JOIN p.tags t " +
+	           "WHERE (:tags IS NULL OR t.name IN :tags) " +
+	           "AND (:startDate IS NULL OR p.createdAt IN :startDate) " +
+	           "AND (:endDate IS NULL OR p.createdAt IN :endDate)")
+	    Page<Post> filterByTagNameAndCreatedAt(
+	                           @Param("tags") List<String> tags, 
+	                           @Param("startDate") String startDate, 
+	                           @Param("endDate") String endDate, 
+	                           Pageable pageable);
+	
+	@Query("SELECT p FROM Post p " +
+	           "JOIN p.tags t " +
+	           "WHERE (:authors IS NULL OR p.author IN :authors) " +
+	           "AND (:tags IS NULL OR t.name IN :tags)")
+	    Page<Post> filterByTagNameAndAuthor(
+	    					   @Param("authors") List<String> authors, 
+	                           @Param("tags") List<String> tags, 
+	                           Pageable pageable);
+	
+	
 	
 }
