@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.data.repository.CrudRepository;
 
-import com.blogapp.entities.Post;
 import com.blogapp.entities.User;
 
 public interface UserRepo extends CrudRepository<User, Integer>{

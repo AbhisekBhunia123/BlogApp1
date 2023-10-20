@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import com.blogapp.entities.Comment;
@@ -16,10 +15,11 @@ import com.blogapp.repositories.PostRepo;
 public class CommentService {
 	@Autowired
 	CommentRepo commentRepo;
+
 	@Autowired
 	PostRepo postRepo;
-	
-	public boolean makeComment(String comment,int postId) {
+
+	public boolean makeComment(String comment, int postId) {
 		boolean isCommented = false;
 		try {
 			Optional<Post> postOp = postRepo.findById(postId);
@@ -33,34 +33,34 @@ public class CommentService {
 			c.setUpdatedAt(new Date().toString());
 			commentRepo.save(c);
 			isCommented = true;
-		}catch(Exception e) {
-			
+		} catch (Exception e) {
+
 		}
 		return isCommented;
 	}
-	
-	public boolean updateComment(String comment,int commentId) {
+
+	public boolean updateComment(String comment, int commentId) {
 		boolean isUpdated = false;
 		try {
-			
+
 			Comment com = commentRepo.findById(commentId).get();
 			com.setComment(comment);
 			com.setUpdatedAt(new Date().toString());
 			commentRepo.save(com);
 			isUpdated = true;
-		}catch(Exception e) {
-			
+		} catch (Exception e) {
+
 		}
 		return isUpdated;
 	}
-	
+
 	public boolean deleteComment(int commentId) {
 		boolean isDeleted = false;
 		try {
 			commentRepo.deleteById(commentId);
 			isDeleted = true;
-		}catch(Exception e) {
-			
+		} catch (Exception e) {
+
 		}
 		return isDeleted;
 	}

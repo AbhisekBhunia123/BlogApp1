@@ -6,16 +6,15 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import com.blogapp.entities.User;
 import com.blogapp.repositories.UserRepo;
 
-@Component
+@Service
 public class UserServices {
 	@Autowired
 	UserRepo userRepo;
-	
 
 	public boolean registerUser(String name, String email, String password) {
 		boolean isSaved = false;
@@ -27,9 +26,8 @@ public class UserServices {
 			userRepo.save(user);
 			isSaved = true;
 		} catch (Exception e) {
-
+			System.out.println(e);
 		}
-
 		return isSaved;
 	}
 
@@ -41,7 +39,7 @@ public class UserServices {
 				user = users.get(0);
 			}
 		} catch (Exception e) {
-
+			System.out.println(e);
 		}
 		return user;
 	}

@@ -1,6 +1,5 @@
 package com.blogapp.services;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -9,14 +8,14 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import com.blogapp.entities.Post;
 import com.blogapp.entities.Tag;
 import com.blogapp.repositories.PostRepo;
 import com.blogapp.repositories.TagRepo;
 
-@Component
+@Service
 public class TagServices {
 
 	@Autowired
@@ -30,14 +29,16 @@ public class TagServices {
 		String createdAt = new Date().toString();
 		String updatedAt = new Date().toString();
 		try {
-
+			Optional<Post> posts = postRepo.findById(postId);
+			Post post = posts.get();
+			if (checkIfNewExist(post.getTags(), name) != null) {
+				return false;
+			}
+			List<Post> list = new ArrayList<>();
 			Tag tag = new Tag();
 			tag.setName(name);
 			tag.setCreatedAt(createdAt);
 			tag.setUpdatedAt(updatedAt);
-			Optional<Post> posts = postRepo.findById(postId);
-			Post post = posts.get();
-			List<Post> list = new ArrayList<>();
 			list.add(post);
 			tag.setPosts(list);
 			Tag tag1 = tagRepo.save(tag);
@@ -45,7 +46,7 @@ public class TagServices {
 			postRepo.save(post);
 			isCreated = true;
 		} catch (Exception e) {
-
+			System.out.println(e);
 		}
 		return isCreated;
 
@@ -53,12 +54,10 @@ public class TagServices {
 
 	public boolean updateTag(String oldTagName, String newTagName, int postId) {
 		boolean isCreated = false;
-		String createdAt = new Date().toString();
 		String updatedAt = new Date().toString();
 		try {
 
 			Post post = postRepo.findById(postId).get();
-			List<Tag> allTags = tagRepo.findAll();
 			List<Tag> tags = post.getTags();
 			if (checkIfNewExist(tags, newTagName) != null) {
 				return false;
@@ -66,6 +65,7 @@ public class TagServices {
 				for (Tag tag : tags) {
 					if (tag.getName().equals(oldTagName)) {
 						tag.setName(newTagName);
+						tag.setUpdatedAt(updatedAt);
 						tagRepo.save(tag);
 						postRepo.save(post);
 						return true;

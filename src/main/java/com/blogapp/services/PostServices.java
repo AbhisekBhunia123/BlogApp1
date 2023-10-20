@@ -1,6 +1,5 @@
 package com.blogapp.services;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -10,20 +9,18 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import com.blogapp.entities.Post;
-import com.blogapp.entities.Tag;
 import com.blogapp.entities.User;
 import com.blogapp.repositories.PostRepo;
 import com.blogapp.repositories.TagRepo;
 import com.blogapp.repositories.UserRepo;
 
-@Component
+@Service
 public class PostServices {
 
 	@Autowired
@@ -54,7 +51,7 @@ public class PostServices {
 			postRepo.save(post);
 			isCreated = true;
 		} catch (Exception e) {
-
+			System.out.println(e);
 		}
 		return isCreated;
 
@@ -62,10 +59,10 @@ public class PostServices {
 
 	public boolean publishPost(String title, String content, String excerpt) {
 		boolean isCreated = false;
+		String createdAt = new Date().toString();
+		String updatedAt = new Date().toString();
+		String publishedAt = new Date().toString();
 		try {
-			String createdAt = new Date().toString();
-			String updatedAt = new Date().toString();
-			String publishedAt = new Date().toString();
 			Post post = new Post();
 			post.setAuthor("Abhisek Bhunia");
 			post.setContent(content);
@@ -80,7 +77,7 @@ public class PostServices {
 			postRepo.save(post);
 			isCreated = true;
 		} catch (Exception e) {
-
+			System.out.println(e);
 		}
 		return isCreated;
 

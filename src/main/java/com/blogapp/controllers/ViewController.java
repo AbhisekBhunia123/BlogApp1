@@ -11,8 +11,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.blogapp.entities.Post;
@@ -32,24 +30,80 @@ public class ViewController {
 	@Autowired
 	TagServices tagService;
 	
-	@RequestMapping("/")
+	@GetMapping("/")
 	public String home(Model model) {
 		return findPaginated(model,1);
 	}
 	
-	@RequestMapping(value = "/post",method = RequestMethod.GET)
+	@GetMapping("/post")
 	public String post() {
 		return "post";
 	}
 	
-	@RequestMapping(value = "/register",method = RequestMethod.GET)
+	@GetMapping("/register")
 	public String register() {
 		return "register";
 	}
 	
-	@RequestMapping(value = "/showLoginPage",method = RequestMethod.GET)
+	@GetMapping("/showLoginPage")
 	public String login() {
 		return "login";
+	}
+	
+	@GetMapping("/page/{pageNo}")
+	public String findPaginated(Model model,@PathVariable("pageNo") int pageNo) {
+		int pageSize = 2;
+		Page<Post> page = postServices.findPaginated(pageNo, pageSize);
+		Set<String> tags = tagService.getAllTagsName();
+		Set<String> authors = userServices.getallAuthorName();
+		List<Post> posts = page.getContent();
+		model.addAttribute("currentPage",pageNo);
+		model.addAttribute("totalPages",page.getTotalPages());
+		model.addAttribute("totalItems",page.getTotalElements());
+		model.addAttribute("posts",posts);
+		model.addAttribute("tags",tags);
+		model.addAttribute("authors",authors);
+		model.addAttribute("searchResults",null);
+		model.addAttribute("simplePaging",true);
+		return "home";
+		
+	}
+	
+	@GetMapping(value = "/search")
+	public String search(Model model,@RequestParam("search") String search,@RequestParam("pageNo") int pageNo) {
+		postServices.searchPost(search);
+		int pageSize = 2;
+		Set<Post> searchPosts = postServices.searchPostPage(search,pageNo,pageSize);
+		Set<String> tags = tagService.getAllTagsName();
+		Set<String> authors = userServices.getallAuthorName();
+		model.addAttribute("currentPage",pageNo);
+		model.addAttribute("totalPages",(searchPosts.size()/pageSize)+1);
+		model.addAttribute("totalItems",searchPosts.size());
+		model.addAttribute("posts",searchPosts);
+		model.addAttribute("tags",tags);
+		model.addAttribute("authors",authors);
+		model.addAttribute("searchText",search);
+		model.addAttribute("searchPaging",true);
+		return "home";
+	}
+	
+	
+	@GetMapping(value="/sortpost")
+	public String sortPost(Model model,@RequestParam("sortValue") String sortType,@RequestParam("pageNo") int pageNo) {
+		int pageSize = 2;
+		Page<Post> page = postServices.sortPost(pageNo,pageSize,sortType);
+		Set<String> tags = tagService.getAllTagsName();
+		Set<String> authors = userServices.getallAuthorName();
+		List<Post> posts = page.getContent();
+		model.addAttribute("currentPage",pageNo);
+		model.addAttribute("totalPages",page.getTotalPages());
+		model.addAttribute("totalItems",page.getTotalElements());
+		model.addAttribute("posts",posts);
+		model.addAttribute("tags",tags);
+		model.addAttribute("authors",authors);
+		model.addAttribute("sortPaging",true);
+		model.addAttribute("sortType",sortType);
+		return "home";
 	}
 	
 	@PostMapping("/homefilter")
@@ -75,69 +129,6 @@ public class ViewController {
         return "home";
     }
 	
-	
-	@RequestMapping(value = "/search")
-	public String search(Model model,@RequestParam("search") String search,@RequestParam("pageNo") int pageNo) {
-		postServices.searchPost(search);
-		int pageSize = 2;
-		Set<Post> searchPosts = postServices.searchPostPage(search,pageNo,pageSize);
-		Set<String> tags = tagService.getAllTagsName();
-		Set<String> authors = userServices.getallAuthorName();
-		model.addAttribute("currentPage",pageNo);
-		model.addAttribute("totalPages",(searchPosts.size()/pageSize)+1);
-		model.addAttribute("totalItems",searchPosts.size());
-		model.addAttribute("posts",searchPosts);
-		model.addAttribute("tags",tags);
-		model.addAttribute("authors",authors);
-		model.addAttribute("searchText",search);
-		model.addAttribute("searchPaging",true);
-		return "home";
-	}
-	
-	
-	
-
-	
-	
-	@RequestMapping(value="/sortpost")
-	public String sortPost(Model model,@RequestParam("sortValue") String sortType,@RequestParam("pageNo") int pageNo) {
-		int pageSize = 2;
-		Page<Post> page = postServices.sortPost(pageNo,pageSize,sortType);
-		Set<String> tags = tagService.getAllTagsName();
-		Set<String> authors = userServices.getallAuthorName();
-		List<Post> posts = page.getContent();
-		model.addAttribute("currentPage",pageNo);
-		model.addAttribute("totalPages",page.getTotalPages());
-		model.addAttribute("totalItems",page.getTotalElements());
-		model.addAttribute("posts",posts);
-		model.addAttribute("tags",tags);
-		model.addAttribute("authors",authors);
-		model.addAttribute("sortPaging",true);
-		model.addAttribute("sortType",sortType);
-		return "home";
-	}
-	
-	
-	
-	@GetMapping("/page/{pageNo}")
-	public String findPaginated(Model model,@PathVariable("pageNo") int pageNo) {
-		int pageSize = 2;
-		Page<Post> page = postServices.findPaginated(pageNo, pageSize);
-		Set<String> tags = tagService.getAllTagsName();
-		Set<String> authors = userServices.getallAuthorName();
-		List<Post> posts = page.getContent();
-		model.addAttribute("currentPage",pageNo);
-		model.addAttribute("totalPages",page.getTotalPages());
-		model.addAttribute("totalItems",page.getTotalElements());
-		model.addAttribute("posts",posts);
-		model.addAttribute("tags",tags);
-		model.addAttribute("authors",authors);
-		model.addAttribute("searchResults",null);
-		model.addAttribute("simplePaging",true);
-		System.out.println(page.getTotalElements());
-		return "home";
-		
-	}
 	
 	
 }
