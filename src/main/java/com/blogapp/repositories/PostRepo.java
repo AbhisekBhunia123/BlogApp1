@@ -1,6 +1,7 @@
 package com.blogapp.repositories;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -19,7 +20,7 @@ public interface PostRepo extends JpaRepository<Post, Integer> {
 
 	public List<Post> findByAuthor(String author);
 
-	public List<Post> findByPublishedAt(String date);
+	public List<Post> findByPublishedAt(Date date);
 
 	@Query("SELECT p FROM Post p WHERE " + "LOWER(p.title) LIKE LOWER(CONCAT('%', :searchTerm, '%')) "
 			+ "OR LOWER(p.author) LIKE LOWER(CONCAT('%', :searchTerm, '%')) "
@@ -39,30 +40,25 @@ public interface PostRepo extends JpaRepository<Post, Integer> {
 	public Page<Post> findByIsPublished(String published, Pageable pageable);
 
 	@Query("SELECT p FROM Post p " + "WHERE (:authors IS NULL OR p.author IN :authors) "
-			+ "AND (:startDate IS NULL OR p.createdAt IN :startDate) "
-			+ "AND (:endDate IS NULL OR p.createdAt IN :endDate)")
-	Page<Post> filterPost(@Param("authors") ArrayList<String> authors, @Param("startDate") String startDate,
-			@Param("endDate") String endDate, Pageable pageable);
+			+ "AND (:startDate IS NULL OR p.createdAt >= :startDate) "
+			+ "AND (:endDate IS NULL OR p.createdAt <= :endDate)")
+	Page<Post> filterPost(@Param("authors") ArrayList<String> authors, @Param("startDate") Date startDate,
+			@Param("endDate") Date endDate, Pageable pageable);
 
-	public Page<Post> findByAuthorInAndCreatedAtBetween(List<String> authors, String startDate, String endDate,
+	public Page<Post> findByAuthorInAndCreatedAtBetween(List<String> authors, Date startDate, Date endDate,
 			Pageable pageable);
 
 	public Page<Post> findByAuthorIn(List<String> authors, Pageable pageable);
 
-	public Page<Post> findByCreatedAtBetween(String startDate, String endDate, Pageable pageable);
+	public Page<Post> findByCreatedAtBetween(Date startDate, Date endDate, Pageable pageable);
 
 	@Query("SELECT p FROM Post p " + "JOIN p.tags t " + "WHERE (:authors IS NULL OR p.author IN :authors) "
-			+ "AND (:tags IS NULL OR t.name IN :tags) " + "AND (:startDate IS NULL OR p.createdAt IN :startDate) "
-			+ "AND (:endDate IS NULL OR p.createdAt IN :endDate)")
+			+ "AND (:tags IS NULL OR t.name IN :tags) " + "AND (:startDate IS NULL OR p.createdAt >= :startDate) "
+			+ "AND (:endDate IS NULL OR p.createdAt <= :endDate)")
 	public Page<Post> filterByAuthorTagAndCreatedAt(@Param("authors") List<String> authors,
-			@Param("tags") List<String> tags, @Param("startDate") String startDate, @Param("endDate") String endDate,
+			@Param("tags") List<String> tags, @Param("startDate") Date startDate, @Param("endDate") Date endDate,
 			Pageable pageable);
 
-	@Query("SELECT p FROM Post p " + "JOIN p.tags t " + "WHERE (:tags IS NULL OR t.name IN :tags) "
-			+ "AND (:startDate IS NULL OR p.createdAt IN :startDate) "
-			+ "AND (:endDate IS NULL OR p.createdAt IN :endDate)")
-	public Page<Post> filterByTagNameAndCreatedAt(@Param("tags") List<String> tags,
-			@Param("startDate") String startDate, @Param("endDate") String endDate, Pageable pageable);
 
 	@Query("SELECT p FROM Post p " + "JOIN p.tags t " + "WHERE (:authors IS NULL OR p.author IN :authors) "
 			+ "AND (:tags IS NULL OR t.name IN :tags)")

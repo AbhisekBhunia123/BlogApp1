@@ -1,5 +1,7 @@
 package com.blogapp.entities;
 
+import java.util.Date;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -20,9 +22,9 @@ public class Comment {
 	private String email;
 	private String comment;
 	@Column(name = "created_at")
-	private String createdAt;
+	private Date createdAt;
 	@Column(name = "updated_at")
-	private String updatedAt;
+	private Date updatedAt;
 	
 	@ManyToOne
     @JoinColumn(name = "post_id")
@@ -33,7 +35,7 @@ public class Comment {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Comment(int id, String name, String email, String comment, String createdAt, String updatedAt, Post post) {
+	public Comment(int id, String name, String email, String comment, Date createdAt, Date updatedAt, Post post) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -76,19 +78,19 @@ public class Comment {
 		this.comment = comment;
 	}
 
-	public String getCreatedAt() {
+	public Date getCreatedAt() {
 		return createdAt;
 	}
 
-	public void setCreatedAt(String createdAt) {
+	public void setCreatedAt(Date createdAt) {
 		this.createdAt = createdAt;
 	}
 
-	public String getUpdatedAt() {
+	public Date getUpdatedAt() {
 		return updatedAt;
 	}
 
-	public void setUpdatedAt(String updatedAt) {
+	public void setUpdatedAt(Date updatedAt) {
 		this.updatedAt = updatedAt;
 	}
 

@@ -16,7 +16,6 @@ public class TagController {
 	public String createTag(@RequestParam("name") String name, @RequestParam("postId") int postId,
 			@RequestParam("userId") int userId) {
 		tagServices.createTag(name, postId);
-		System.out.println(postId);
 		return "redirect:/publishedpost/" + userId;
 	}
 

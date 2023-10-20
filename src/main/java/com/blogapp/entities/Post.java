@@ -1,6 +1,7 @@
 package com.blogapp.entities;
 
 
+import java.util.Date;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -28,13 +29,13 @@ public class Post {
 	private String content;
 	private String author;
 	@Column(name = "published_at")
-	private String publishedAt;
+	private Date publishedAt;
 	@Column(name = "is_published")
 	private String isPublished;
 	@Column(name = "created_at")
-	private String createdAt;
+	private Date createdAt;
 	@Column(name = "updated_at")
-	private String updatedAt;
+	private Date updatedAt;
 	
 	@ManyToOne
 	@JoinColumn(name = "user_id")
@@ -56,8 +57,8 @@ public class Post {
 	}
 
 
-	public Post(int id, String title, String excerpt, String content, String author, String publishedAt,
-			String isPublished, String createdAt, String updatedAt, User user, List<Tag> tags, List<Comment> comments) {
+	public Post(int id, String title, String excerpt, String content, String author, Date publishedAt,
+			String isPublished, Date createdAt, Date updatedAt, User user, List<Tag> tags, List<Comment> comments) {
 		super();
 		this.id = id;
 		this.title = title;
@@ -124,12 +125,12 @@ public class Post {
 	}
 
 
-	public String getPublishedAt() {
+	public Date getPublishedAt() {
 		return publishedAt;
 	}
 
 
-	public void setPublishedAt(String publishedAt) {
+	public void setPublishedAt(Date publishedAt) {
 		this.publishedAt = publishedAt;
 	}
 
@@ -144,22 +145,22 @@ public class Post {
 	}
 
 
-	public String getCreatedAt() {
+	public Date getCreatedAt() {
 		return createdAt;
 	}
 
 
-	public void setCreatedAt(String createdAt) {
+	public void setCreatedAt(Date createdAt) {
 		this.createdAt = createdAt;
 	}
 
 
-	public String getUpdatedAt() {
+	public Date getUpdatedAt() {
 		return updatedAt;
 	}
 
 
-	public void setUpdatedAt(String updatedAt) {
+	public void setUpdatedAt(Date updatedAt) {
 		this.updatedAt = updatedAt;
 	}
 

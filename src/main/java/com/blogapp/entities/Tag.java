@@ -1,5 +1,6 @@
 package com.blogapp.entities;
 
+import java.util.Date;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -20,9 +21,9 @@ public class Tag {
 	private int id;
 	private String name;
 	@Column(name = "created_at")
-	private String createdAt;
+	private Date createdAt;
 	@Column(name = "updated_at")
-	private String updatedAt;
+	private Date updatedAt;
 	
 	@ManyToMany(mappedBy = "tags",cascade = CascadeType.ALL)
     private List<Post> posts;
@@ -32,7 +33,7 @@ public class Tag {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Tag(int id, String name, String createdAt, String updatedAt, List<Post> posts) {
+	public Tag(int id, String name, Date createdAt, Date updatedAt, List<Post> posts) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -57,19 +58,19 @@ public class Tag {
 		this.name = name;
 	}
 
-	public String getCreatedAt() {
+	public Date getCreatedAt() {
 		return createdAt;
 	}
 
-	public void setCreatedAt(String createdAt) {
+	public void setCreatedAt(Date createdAt) {
 		this.createdAt = createdAt;
 	}
 
-	public String getUpdatedAt() {
+	public Date getUpdatedAt() {
 		return updatedAt;
 	}
 
-	public void setUpdatedAt(String updatedAt) {
+	public void setUpdatedAt(Date updatedAt) {
 		this.updatedAt = updatedAt;
 	}
 

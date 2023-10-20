@@ -1,7 +1,8 @@
 package com.blogapp.services;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -15,6 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.blogapp.entities.Post;
+import com.blogapp.entities.Tag;
 import com.blogapp.entities.User;
 import com.blogapp.repositories.PostRepo;
 import com.blogapp.repositories.TagRepo;
@@ -35,15 +37,15 @@ public class PostServices {
 	public boolean createPost(String title, String content, String excerpt) {
 		boolean isCreated = false;
 		try {
-			String createdAt = new Date().toString();
-			String updatedAt = new Date().toString();
+			Date createdAt = new Date();
+			Date updatedAt = new Date();
 			Post post = new Post();
 			post.setAuthor("Abhisek");
 			post.setContent(content);
 			post.setTitle(title);
 			post.setExcerpt(excerpt);
 			post.setIsPublished("no");
-			post.setPublishedAt("none");
+			post.setPublishedAt(null);
 			post.setCreatedAt(createdAt);
 			post.setUpdatedAt(updatedAt);
 			User user = userRepo.findById(352).get();
@@ -59,9 +61,9 @@ public class PostServices {
 
 	public boolean publishPost(String title, String content, String excerpt) {
 		boolean isCreated = false;
-		String createdAt = new Date().toString();
-		String updatedAt = new Date().toString();
-		String publishedAt = new Date().toString();
+		Date createdAt = new Date();
+		Date updatedAt = new Date();
+		Date publishedAt = new Date();
 		try {
 			Post post = new Post();
 			post.setAuthor("Abhisek Bhunia");
@@ -139,37 +141,70 @@ public class PostServices {
 		List<String> tagsList = new ArrayList<>();
 		Set<Post> posts = new HashSet<>();
 		Pageable pageble = PageRequest.of(pageNo - 1, pageSize);
+		Date strtDate = null;
+		Date eDate = null;
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		if (startDate.length() != 0 && endDate.length() != 0) {
+			try {
+				startDate = startDate + " 00:00:00.000";
+				endDate = endDate + " 23:59:59.999";
+				strtDate = dateFormat.parse(startDate);
+				eDate = dateFormat.parse(endDate);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+		}
+
 		if (authors != null) {
-			authorsList.addAll(Arrays.asList(authors));
+			for (String author : authors) {
+				authorsList.add(author);
+			}
 		}
 		if (tags != null) {
-			tagsList.addAll(Arrays.asList(tags));
+			for (String tag : tags) {
+				tagsList.add(tag);
+			}
 		}
 		Page<Post> authorposts = null;
-		Page<Post> tagPosts = null;
+		Page<Tag> tagPosts = null;
 		if (authorsList.size() != 0 && tagsList.size() == 0 && startDate.length() == 0 && endDate.length() == 0) {
 			authorposts = postRepo.findByAuthorIn(authorsList, pageble);
 			posts.addAll(authorposts.getContent());
 		} else if (authorsList.size() == 0 && tagsList.size() != 0 && startDate.length() == 0
 				&& endDate.length() == 0) {
 			tagPosts = tagRepo.findByTagNamesIn(tagsList, pageble);
-			posts.addAll(tagPosts.getContent());
+			for (Tag tag : tagPosts.getContent()) {
+				posts.addAll(tag.getPosts());
+			}
 		} else if (authorsList.size() == 0 && tagsList.size() == 0 && startDate.length() != 0
 				&& endDate.length() != 0) {
-			authorposts = postRepo.findByCreatedAtBetween(startDate, endDate, pageble);
+			authorposts = postRepo.findByCreatedAtBetween(strtDate, eDate, pageble);
 			posts.addAll(authorposts.getContent());
+			System.out.println("Hi");
 		} else if (authorsList.size() != 0 && tagsList.size() == 0 && startDate.length() != 0
 				&& endDate.length() != 0) {
-			authorposts = postRepo.findByAuthorInAndCreatedAtBetween(authorsList, startDate, endDate, pageble);
+			authorposts = postRepo.findByAuthorInAndCreatedAtBetween(authorsList, strtDate, eDate, pageble);
 			posts.addAll(authorposts.getContent());
 		} else if (authorsList.size() != 0 && tagsList.size() != 0 && startDate.length() != 0
 				&& endDate.length() != 0) {
-			authorposts = postRepo.filterByAuthorTagAndCreatedAt(authorsList, tagsList, startDate, endDate, pageble);
-			posts.addAll(authorposts.getContent());
+			Page<Post> filterPostByDate = postRepo.findByCreatedAtBetween(strtDate, eDate, pageble);
+			for (Post post : filterPostByDate.getContent()) {
+				for (Tag tag : post.getTags()) {
+					if (tagsList.contains(tag.getName()) && authorsList.contains(post.getAuthor())) {
+						posts.add(post);
+					}
+				}
+			}
 		} else if (authorsList.size() == 0 && tagsList.size() != 0 && startDate.length() != 0
 				&& endDate.length() != 0) {
-			authorposts = postRepo.filterByTagNameAndCreatedAt(tagsList, startDate, endDate, pageble);
-			posts.addAll(authorposts.getContent());
+			Page<Post> filterPostByDate = postRepo.findByCreatedAtBetween(strtDate, eDate, pageble);
+			for (Post post : filterPostByDate.getContent()) {
+				for (Tag tag : post.getTags()) {
+					if (tagsList.contains(tag.getName())) {
+						posts.add(post);
+					}
+				}
+			}
 		} else if (authorsList.size() != 0 && tagsList.size() != 0 && startDate.length() == 0
 				&& endDate.length() == 0) {
 			authorposts = postRepo.filterByTagNameAndAuthor(authorsList, tagsList, pageble);
@@ -219,7 +254,7 @@ public class PostServices {
 
 	public boolean updatePost(String content, String excerpt, String title, int postId) {
 		boolean isUpdated = false;
-		String updatedTime = new Date().toString();
+		Date updatedTime = new Date();
 		try {
 			Post post = postRepo.findById(postId).get();
 			post.setTitle(title);

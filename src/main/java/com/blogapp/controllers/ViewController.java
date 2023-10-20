@@ -111,6 +111,8 @@ public class ViewController {
         @RequestParam(value = "authors", required = false) String[] authors,
         @RequestParam(value = "tags", required = false) String[] tags,@RequestParam("startDate") String startDate,@RequestParam("endDate") String endDate,@RequestParam("pageNo") int pageNo) {
 		int pageSize = 4;
+		System.out.println(startDate);
+		System.out.println(endDate);
 		Set<Post> posts = postServices.filterPost(authors,tags,startDate,endDate,pageNo,pageSize);
 		Set<String> navtags = tagService.getAllTagsName();
 		Set<String> navauthor = userServices.getallAuthorName();

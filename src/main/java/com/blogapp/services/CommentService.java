@@ -29,8 +29,8 @@ public class CommentService {
 			c.setEmail("john@gmail.com");
 			c.setComment(comment);
 			c.setPost(post);
-			c.setCreatedAt(new Date().toString());
-			c.setUpdatedAt(new Date().toString());
+			c.setCreatedAt(new Date());
+			c.setUpdatedAt(new Date());
 			commentRepo.save(c);
 			isCommented = true;
 		} catch (Exception e) {
@@ -45,7 +45,7 @@ public class CommentService {
 
 			Comment com = commentRepo.findById(commentId).get();
 			com.setComment(comment);
-			com.setUpdatedAt(new Date().toString());
+			com.setUpdatedAt(new Date());
 			commentRepo.save(com);
 			isUpdated = true;
 		} catch (Exception e) {

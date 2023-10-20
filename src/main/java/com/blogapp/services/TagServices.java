@@ -1,6 +1,5 @@
 package com.blogapp.services;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -26,24 +25,29 @@ public class TagServices {
 
 	public boolean createTag(String name, int postId) {
 		boolean isCreated = false;
-		String createdAt = new Date().toString();
-		String updatedAt = new Date().toString();
+		Date createdAt = new Date();
+		Date updatedAt = new Date();
 		try {
 			Optional<Post> posts = postRepo.findById(postId);
+			List<Tag> existingTags = tagRepo.findByName(name);
 			Post post = posts.get();
-			if (checkIfNewExist(post.getTags(), name) != null) {
+			List<Tag> tags = post.getTags();
+			if (checkIfNewExist(tags, name) != null) {
 				return false;
 			}
-			List<Post> list = new ArrayList<>();
-			Tag tag = new Tag();
-			tag.setName(name);
-			tag.setCreatedAt(createdAt);
-			tag.setUpdatedAt(updatedAt);
-			list.add(post);
-			tag.setPosts(list);
-			Tag tag1 = tagRepo.save(tag);
-			post.getTags().add(tag1);
-			postRepo.save(post);
+			if (existingTags.size() != 0) {
+				tags.add(existingTags.get(0));
+				postRepo.save(post);
+			} else {
+				Tag newtag = new Tag();
+				newtag.setName(name);
+				newtag.setCreatedAt(createdAt);
+				newtag.setUpdatedAt(updatedAt);
+				Tag tag1 = tagRepo.save(newtag);
+				tags.add(tag1);
+				postRepo.save(post);
+			}
+
 			isCreated = true;
 		} catch (Exception e) {
 			System.out.println(e);
@@ -54,7 +58,6 @@ public class TagServices {
 
 	public boolean updateTag(String oldTagName, String newTagName, int postId) {
 		boolean isCreated = false;
-		String updatedAt = new Date().toString();
 		try {
 
 			Post post = postRepo.findById(postId).get();
@@ -64,10 +67,8 @@ public class TagServices {
 			} else {
 				for (Tag tag : tags) {
 					if (tag.getName().equals(oldTagName)) {
-						tag.setName(newTagName);
-						tag.setUpdatedAt(updatedAt);
-						tagRepo.save(tag);
-						postRepo.save(post);
+						createTag(newTagName, postId);
+						deleteTag(oldTagName, postId);
 						return true;
 					}
 				}
@@ -81,15 +82,21 @@ public class TagServices {
 	}
 
 	public boolean deleteTag(String name, int postId) {
+
 		boolean isDeleted = false;
 		try {
 			Post post = postRepo.findById(postId).get();
 			List<Tag> tags = post.getTags();
 			for (Tag tag : tags) {
-				if (tag.getName().equals(name)) {
+				if (tag.getName().equals(name) && tag.getPosts().size() == 1) {
+					System.out.println("Deleted");
 					tags.remove(tag);
 					postRepo.save(post);
-					tagRepo.delete(tag);
+					return true;
+				} else if (tag.getName().equals(name) && tag.getPosts().size() != 1) {
+					System.out.println("simple delete");
+					tags.remove(tag);
+					postRepo.save(post);
 					return true;
 				}
 			}
