@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.blogapp.entities.User;
@@ -15,6 +16,9 @@ import com.blogapp.repositories.UserRepo;
 public class UserServices {
 	@Autowired
 	UserRepo userRepo;
+	
+	@Autowired
+	BCryptPasswordEncoder bcryptPasswordEncoder;
 
 	public boolean registerUser(String name, String email, String password) {
 		boolean isSaved = false;
@@ -22,7 +26,7 @@ public class UserServices {
 			User user = new User();
 			user.setName(name);
 			user.setEmail(email);
-			user.setPassword(password);
+			user.setPassword(bcryptPasswordEncoder.encode(password));
 			userRepo.save(user);
 			isSaved = true;
 		} catch (Exception e) {
@@ -54,6 +58,10 @@ public class UserServices {
 			usersName.add(userName);
 		}
 		return usersName;
+	}
+	
+	public User findByEmail(String email) {
+		return userRepo.findByEmail(email);
 	}
 
 }

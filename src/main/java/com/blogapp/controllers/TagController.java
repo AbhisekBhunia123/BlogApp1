@@ -12,25 +12,25 @@ public class TagController {
 	@Autowired
 	TagServices tagServices;
 
-	@PostMapping("/createtag")
+	@PostMapping("/account/createtag")
 	public String createTag(@RequestParam("name") String name, @RequestParam("postId") int postId,
-			@RequestParam("userId") int userId) {
+			@RequestParam("userId") String userMail) {
 		tagServices.createTag(name, postId);
-		return "redirect:/publishedpost/" + userId;
+		return "redirect:/account/publishedpost/" + userMail;
 	}
 
-	@PostMapping("/updatetag")
+	@PostMapping("/account/updatetag")
 	public String updatetag(@RequestParam("newname") String newTagName, @RequestParam("oldname") String oldTagName,
-			@RequestParam("postId") int postId, @RequestParam("userId") int userId) {
+			@RequestParam("postId") int postId, @RequestParam("userId") String userEmail) {
 		tagServices.updateTag(oldTagName, newTagName, postId);
-		return "redirect:/publishedpost/" + userId;
+		return "redirect:/account/publishedpost/" + userEmail;
 	}
 
-	@PostMapping("/deltag")
-	public String deleteTag(@RequestParam("name") String name, @RequestParam("userId") int userId,
+	@PostMapping("/account/deltag")
+	public String deleteTag(@RequestParam("name") String name, @RequestParam("userId") String userEmail,
 			@RequestParam("postId") int postId) {
 		tagServices.deleteTag(name, postId);
-		return "redirect:/publishedpost/" + userId;
+		return "redirect:/account/publishedpost/" + userEmail;
 	}
 
 }

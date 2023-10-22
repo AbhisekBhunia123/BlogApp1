@@ -1,26 +1,95 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
+
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
+	<title>Registration Page</title>
+	<link rel="stylesheet" th:href="@{/style/style.css}">
+	<style>
+		/* Container Styles */
+		.container {
+			text-align: center;
+			margin-top: 20px;
+		}
+
+		/* Heading Styles */
+		h1 {
+			font-size: 24px;
+			color: #333;
+			margin-bottom: 20px;
+		}
+
+		/* Form Container Styles */
+		.form-container {
+			max-width: 300px;
+			margin: 0 auto;
+			padding: 20px;
+			border: 1px solid #ccc;
+			border-radius: 5px;
+			background-color: #fff;
+		}
+
+		/* Input Styles */
+		input {
+			width: 100%;
+			padding: 10px;
+			margin: 5px 0;
+			border: 1px solid #ccc;
+			border-radius: 3px;
+			box-sizing: border-box;
+		}
+
+		/* Button Styles */
+		.button {
+			background-color: #007bff;
+			color: #fff;
+			border: none;
+			padding: 10px 20px;
+			border-radius: 3px;
+			cursor: pointer;
+			font-weight: bold;
+		}
+
+		/* Button Hover Effect */
+		.button:hover {
+			background-color: #0056b3;
+		}
+
+		/* Paragraph Styles (e.g., "Already have an account?") */
+		p {
+			font-size: 14px;
+			color: #777;
+			margin-top: 10px;
+		}
+
+		/* Link Styles (e.g., "Login") */
+		a {
+			color: #007bff;
+			text-decoration: none;
+		}
+
+		/* Link Hover Effect */
+		a:hover {
+			text-decoration: underline;
+		}
+	</style>
 </head>
+
 <body>
-	<form action="/register" method="post">
-        <div>
-            <label for="name">Name:</label>
-            <input type="text" id="name" name="name" required>
-        </div>
-        <div>
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
-        </div>
-        <div>
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
-        </div>
-        <div>
-            <button type="submit">Register</button>
-        </div>
-    </form>
+	<div class="container">
+		<h1>Create Account</h1>
+		<div class="form-container">
+			<form th:action="@{/register}" method="post">
+				<input type="text" placeholder="Name" name="name" required="required"><br>
+				<input type="email" placeholder="Email" name="email" required="required"><br>
+				<input type="password" placeholder="Password" name="password" required="required"><br>
+				<br>
+				<button class="button" type="submit">Submit</button>
+			</form>
+			<p>
+				Already have an account? <a th:href="@{/showLoginPage}">Login</a>
+			</p>
+		</div>
+	</div>
 </body>
+
 </html>

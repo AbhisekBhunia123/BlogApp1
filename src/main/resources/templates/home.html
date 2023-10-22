@@ -6,9 +6,7 @@
 	<title>Insert title here</title>
 
 	<style>
-		/* Style for the navigation bar */
-		.nav {
-			width: 100%;
+		nav {
 			background-color: #000;
 			color: #fff;
 			display: flex;
@@ -18,27 +16,27 @@
 			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 		}
 
-		/* Style for the Project Name */
-		.projectH {
+
+		.ProjectName h1 {
 			font-size: 24px;
+			margin-bottom: 10px;
 		}
 
-		/* Style for the search input and button */
-		#searchInput {
+
+		.searchDiv input[type="text"] {
 			width: 70%;
-			height: 40px;
-			padding: 10px;
 			padding-left: 20px;
+			padding: 5px;
+			border: 1px solid #555;
 			border-radius: 30px;
 			margin-bottom: 10px;
-			margin-left: 15%;
-			border: none;
 			outline: none;
-			font-size: 20px;
+			margin-left: 15%;
+			height: 40px;
+
 		}
 
 
-		/* Style for the filter and sort sections */
 		.filterDiv,
 		.sortDiv,
 		.searchDiv {
@@ -56,14 +54,12 @@
 		}
 
 
-
-		/* Style for checkbox labels */
 		label {
 			display: block;
 			margin: 5px 0;
 		}
 
-		/* Style for date input and Apply Filter button */
+
 		input[type="date"] {
 			padding: 5px;
 			border: 1px solid #555;
@@ -71,7 +67,7 @@
 			margin-bottom: 10px;
 		}
 
-		/* Style for the Sort button */
+
 		.filterbtn {
 			background-color: #333;
 			color: #fff;
@@ -80,224 +76,165 @@
 			border-radius: 5px;
 			cursor: pointer;
 			transition: background-color 0.2s;
+			margin-bottom: 10px;
 		}
 
 		.filterbtn:hover {
 			background-color: #555;
 		}
 
-		/* Style for the Register and Login Div */
-		.RegisterAndLoginDiv,
-		.LogOutDiv {
-			/* You can add styles to these sections as needed */
+		/* Style for the "write" and "WorkSpace" links */
+		nav a {
+			color: #fff;
+			text-decoration: none;
+			margin-bottom: 10px;
 		}
 
 
-
-
-
-
-		/* Style for the container */
-		.container {
-			max-width: 800px;
-			margin: 0 auto;
+		/* Style container */
+		/* Style for the container of posts */
+		.contentDiv {
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: space-evenly;
+			gap: 20px;
 		}
 
-		/* Style for the card */
+		/* Style for each individual post container */
+		.postContainer {
+			flex: 0 1 calc(30% - 20px);
+			/* Adjust the width as needed */
+			padding: 10px;
+		}
+
+		/* Style for the post anchor links */
+		.postAnchor {
+			text-decoration: none;
+			color: #333;
+		}
+
+		/* Style for the post card */
 		.card {
 			border: 1px solid #ddd;
 			border-radius: 5px;
-			background-color: #fff;
-			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-			margin-top: 10px;
 		}
 
-		/* Style for the card header */
+		/* Style for the card header (author and creation date) */
 		.card-header {
-			background-color: #333;
-			color: #fff;
-			padding: 10px;
-			border-radius: 5px 5px 0 0;
-			text-align: center;
+			background-color: #f0f0f0;
+			padding: 5px;
 		}
 
-		/* Style for the author and createdAt */
+		/* Style for author and creation date */
 		.card-header p {
-			font-size: 16px;
-			margin: 5px 0;
+			margin: 0;
+			font-size: 14px;
+			color: #777;
 		}
 
-		/* Style for the card body */
+		/* Style for the card title (post title) */
+		.card-title {
+			font-size: 20px;
+			font-weight: bold;
+		}
+
+		/* Style for the card body (excerpt and comments) */
 		.card-body {
 			padding: 10px;
 		}
 
-		/* Style for the card title */
-		.card-title {
-			font-size: 24px;
-			font-weight: bold;
-			margin: 10px 0;
-		}
-
-		/* Style for the card content */
-		.card-text {
+		/* Style for comments and tags */
+		.card-text,
+		.card-body p {
 			font-size: 16px;
+			color: #333;
 		}
 
-		/* Style for the comments section */
-		.collapse {
-			margin: 20px 0;
+		/* Style for tags */
+		.card-body p {
+			margin-bottom: 5px;
+			color: #007bff;
+			/* Blue color for tags */
 		}
 
-		/* Style for comment name and email */
-		.collapse span {
-			font-size: 14px;
-			font-weight: bold;
-			margin: 5px 0;
+		/* Hover effect for the post card */
+		.card:hover {
+			box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 		}
 
-		/* Style for the comment content */
-		.collapse p {
-			font-size: 16px;
-			margin: 5px 0;
+		/* Responsive design for smaller screens */
+		@media (max-width: 768px) {
+			.postContainer {
+				flex: 0 1 calc(50% - 20px);
+			}
 		}
 
-		/* Style for post anchor link */
-		.postAnchor {
-			text-decoration: none;
-			color: inherit;
-			cursor: pointer;
-		}
 
-		/* Additional styles can be added as needed */
+		/* pagination div */
 
-
-		/* pagination style */
 		/* Style for the pagination container */
-		.container.p-4 {
+		.PaginationDiv {
 			display: flex;
 			justify-content: center;
 			margin-top: 20px;
-			/* Add some top margin for spacing */
+		}
+
+		/* Style for the navigation element */
+		.paginationNav {
+			margin: 0;
 		}
 
 		/* Style for the pagination list */
 		.pagination {
 			list-style: none;
+			padding: 0;
 			display: flex;
-			gap: 10px;
 		}
 
-		/* Style for the pagination items */
+		/* Style for each pagination item */
 		.page-item {
-			display: inline-block;
+			margin: 0 2px;
 		}
 
-		/* Style for the pagination links */
+		/* Style for pagination link */
 		.page-link {
-			padding: 10px 15px;
-			border: 1px solid #ccc;
-			border-radius: 5px;
 			text-decoration: none;
+			border: 1px solid #ccc;
+			padding: 5px 10px;
+			border-radius: 5px;
+			background-color: #fff;
 			color: #333;
 		}
 
-		/* Style for the disabled pagination links */
+		/* Style for disabled link */
 		.page-item.disabled .page-link {
 			pointer-events: none;
-			background-color: #f0f0f0;
-			border: 1px solid #f0f0f0;
-			color: #ccc;
+			background-color: #ccc;
+			color: #999;
 		}
 
-		/* Style for the current page number */
-		.page-item.disabled .page-link {
-			font-weight: bold;
+		/* Style for active link */
+		.page-item.active .page-link {
+			background-color: #007bff;
+			color: #fff;
 		}
 
-		/* Hover effect for the pagination links */
+		/* Style for hover effect on the link */
 		.page-link:hover {
 			background-color: #f0f0f0;
+			color: #333;
 		}
 	</style>
 
 </head>
 
 <body>
-	<!--<div class="container-fluid" th:insert="navbar::navbar(${null})"></div>-->
-
-	<!--new navbar code-->
-	<nav class="nav">
-		<div class="ProjectName">
-			<h1 class="projectH">This is My project</h1>
-		</div>
-		<div class="searchDiv">
-			<form action="/search">
-				<input type="hidden" name="pageNo" value="1" />
-				<input id="searchInput" type="text" name="search" />
-			</form>
-
-		</div>
-		<div class="filterDiv">
-			<form action="/homefilter" method="post">
-				<input type="hidden" name="pageNo" value="1" />
-				<h2>Select Authors:</h2>
-				<div th:if="${authors != null}" th:each="author :${authors}">
-					<label>
-						<input type="checkbox" name="authors" th:value="${author}" th:text="${author}">
-						<br>
-					</label>
-				</div>
-
-				<h2>Select Tags:</h2>
-				<div th:if="${tags != null}" th:each="tag :${tags}">
-					<label>
-						<input type="checkbox" name="tags" th:value="${tag}" th:text="${tag}">
-						<br>
-					</label>
-				</div>
-
-				<h1>Select Date</h1>
-				<p>Start Date</p>
-				<input type="date" name="startDate" />
-				<p>End Date</p>
-				<input type="date" name="endDate" />
-				<br>
-				<br>
-				<input type="submit" value="Apply Filter">
-			</form>
-		</div>
-		<div class="sortDiv">
-			<form action="/sortpost" method="get">
-				<div class="form-check">
-					<input class="form-check-input" type="radio" name="sortValue" id="flexRadioDefault1" value="asc"
-						checked>
-					<label class="form-check-label text-light" for="flexRadioDefault1">
-						Sort By ASC
-					</label>
-				</div>
-				<div class="form-check">
-					<input class="form-check-input" type="radio" name="sortValue" id="flexRadioDefault2" value="desc">
-					<label class="form-check-label text-light" for="flexRadioDefault2">
-						Sort By Desc
-					</label>
-				</div>
-				<input type="hidden" name="pageNo" value="1" />
-				<button type="submit" class="btn btn-success filterbtn">Sort</button>
-			</form>
-		</div>
-		<div class="RegisterAndLoginDiv">
-
-		</div>
-		<div class="LogOutDiv">
-
-		</div>
-	</nav>
+	<div class="container-fluid" th:insert="navbar::navbar(${authors},${tags},${searchText},${user})"></div>
 	<!--new container code-->
 	<hr>
 	<div class="contentDiv">
-		<div th:each="post : ${posts}" class="container">
-			<a th:href="@{/account/blog/{id}(id=${post.id})}" class="postAnchor">
+		<div th:each="post : ${posts}" class="container postContainer">
+			<a th:href="@{/blog/{id}(id=${post.id})}" class="postAnchor">
 				<div class="card">
 					<div class="card-header">
 						<p th:text="${post.author}"></p>
@@ -316,8 +253,9 @@
 		</div>
 
 	</div>
-	<div class="container p-4" style="display: flex;justify-content: center;" th:if="${searchPaging}">
-		<nav aria-label="Page navigation example">
+	<div class="PaginationDiv container p-4" style="display: flex;justify-content: center;background-color: none;"
+		th:if="${searchPaging}">
+		<nav class="paginationNav" aria-label="Page navigation example">
 			<ul class="pagination">
 				<li class="page-item" th:if="${currentPage > 1}"><a class="page-link"
 						th:href="@{'/search?pageNo='+ ${currentPage-1} + '&search='+${searchText}}">Previous</a></li>
@@ -325,11 +263,14 @@
 				</li>
 				<li class="page-item disabled"><a class="page-link" href="#" th:text="${currentPage}"></a></li>
 				<li class="page-item" th:if="${currentPage+1 <= totalPages}"><a class="page-link"
-						th:href="@{'/search?pageNo='+ ${currentPage+1}+'&search='+${searchText}}" th:text="${currentPage+1}"></a></li>
+						th:href="@{'/search?pageNo='+ ${currentPage+1}+'&search='+${searchText}}"
+						th:text="${currentPage+1}"></a></li>
 				<li class="page-item" th:if="${currentPage+2 <= totalPages}"><a class="page-link"
-						th:href="@{'/search?pageNo='+ ${currentPage+2}+'&search='+${searchText}}" th:text="${currentPage+2}"></a></li>
+						th:href="@{'/search?pageNo='+ ${currentPage+2}+'&search='+${searchText}}"
+						th:text="${currentPage+2}"></a></li>
 				<li class="page-item" th:if="${currentPage+3 <= totalPages}"><a class="page-link"
-						th:href="@{'/search?pageNo='+ ${currentPage+3}+'&search='+${searchText}}" th:text="${currentPage+3}"></a></li>
+						th:href="@{'/search?pageNo='+ ${currentPage+3}+'&search='+${searchText}}"
+						th:text="${currentPage+3}"></a></li>
 				<li class="page-item" th:if="${currentPage < totalPages}"><a class="page-link"
 						th:href="@{'/search?pageNo='+ ${currentPage+1}+'&search='+${searchText}}">Next</a></li>
 				<li class="page-item disabled" th:if="${currentPage >= totalPages}"><a class="page-link"
@@ -338,10 +279,11 @@
 		</nav>
 	</div>
 
-	
+
 	<!--search pagenation-->
-	<div class="container p-4" style="display: flex;justify-content: center;" th:if="${simplePaging}">
-		<nav aria-label="Page navigation example">
+	<div class="PaginationDiv container p-4" style="display: flex;justify-content: center;background-color: none;"
+		th:if="${simplePaging}">
+		<nav class="paginationNav" aria-label="Page navigation example">
 			<ul class="pagination">
 				<li class="page-item" th:if="${currentPage > 1}"><a class="page-link"
 						th:href="@{'/page/'+ ${currentPage-1}}">Prev</a></li>
@@ -361,10 +303,11 @@
 			</ul>
 		</nav>
 	</div>
-	
+
 	<!--sort Pagenation-->
-	<div class="container p-4" style="display: flex;justify-content: center;" th:if="${sortPaging}">
-		<nav aria-label="Page navigation example">
+	<div class="PaginationDiv container p-4" style="display: flex;justify-content: center;background-color: none;"
+		th:if="${sortPaging}">
+		<nav class="paginationNav" aria-label="Page navigation example">
 			<ul class="pagination">
 				<li class="page-item" th:if="${currentPage > 1}"><a class="page-link"
 						th:href="@{'/sortpost?sortValue='+${sortType}+'&pageNo='+ ${currentPage-1}}">SortPrev</a></li>
@@ -372,11 +315,14 @@
 				</li>
 				<li class="page-item disabled"><a class="page-link" href="#" th:text="${currentPage}"></a></li>
 				<li class="page-item" th:if="${currentPage+1 <= totalPages}"><a class="page-link"
-						th:href="@{'/sortpost?sortValue='+${sortType}+'&pageNo='+  ${currentPage+1}}" th:text="${currentPage+1}"></a></li>
+						th:href="@{'/sortpost?sortValue='+${sortType}+'&pageNo='+  ${currentPage+1}}"
+						th:text="${currentPage+1}"></a></li>
 				<li class="page-item" th:if="${currentPage+2 <= totalPages}"><a class="page-link"
-						th:href="@{'/sortpost?sortValue='+${sortType}+'&pageNo='+  ${currentPage+2}}" th:text="${currentPage+2}"></a></li>
+						th:href="@{'/sortpost?sortValue='+${sortType}+'&pageNo='+  ${currentPage+2}}"
+						th:text="${currentPage+2}"></a></li>
 				<li class="page-item" th:if="${currentPage+3 <= totalPages}"><a class="page-link"
-						th:href="@{'/sortpost?sortValue='+ ${sortType}+'&pageNo='+ ${currentPage+3}}" th:text="${currentPage+3}"></a></li>
+						th:href="@{'/sortpost?sortValue='+ ${sortType}+'&pageNo='+ ${currentPage+3}}"
+						th:text="${currentPage+3}"></a></li>
 				<li class="page-item" th:if="${currentPage < totalPages}"><a class="page-link"
 						th:href="@{'/sortpost?sortValue='+${sortType}+'&pageNo='+  ${currentPage+1}}">Next</a></li>
 				<li class="page-item disabled" th:if="${currentPage >= totalPages}"><a class="page-link"
@@ -385,8 +331,29 @@
 		</nav>
 	</div>
 
-
-
+	<!--filter pagenation-->
+	<div class="PaginationDiv container p-4" style="display: flex;justify-content: center;background-color: none;"
+		th:if="${filterPage}">
+		<nav class="paginationNav" aria-label="Page navigation example">
+			<ul class="pagination">
+				<li class="page-item" th:if="${currentPage > 1}"><a class="page-link"
+						th:href="@{'/page/'+ ${currentPage-1}}">Prev</a></li>
+				<li class="page-item disabled" th:if="${currentPage <= 1}"><a class="page-link" href="#">Prev</a>
+				</li>
+				<li class="page-item disabled"><a class="page-link" href="#" th:text="${currentPage}"></a></li>
+				<li class="page-item" th:if="${currentPage+1 <= totalPages}"><a class="page-link"
+						th:href="@{'/page/'+ ${currentPage+1}}" th:text="${currentPage+1}"></a></li>
+				<li class="page-item" th:if="${currentPage+2 <= totalPages}"><a class="page-link"
+						th:href="@{'/page/'+ ${currentPage+2}}" th:text="${currentPage+2}"></a></li>
+				<li class="page-item" th:if="${currentPage+3 <= totalPages}"><a class="page-link"
+						th:href="@{'/page/'+ ${currentPage+3}}" th:text="${currentPage+3}"></a></li>
+				<li class="page-item" th:if="${currentPage < totalPages}"><a class="page-link"
+						th:href="@{'/page/'+ ${currentPage+1}}">Next</a></li>
+				<li class="page-item disabled" th:if="${currentPage >= totalPages}"><a class="page-link" href="#">Next</a>
+				</li>
+			</ul>
+		</nav>
+	</div>
 
 </body>
 

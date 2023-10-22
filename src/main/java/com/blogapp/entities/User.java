@@ -4,6 +4,7 @@ package com.blogapp.entities;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,19 +22,11 @@ public class User {
 	private String name;
 	private String email;
 	private String password;
-	private String role;
-	
-	private int active = 1;
-	
+	@Column(name = "roles")
+	private String role = "ROLE_AUTHOR";
 	
 	
-	public int getActive() {
-		return active;
-	}
-
-	public void setActive(int active) {
-		this.active = active;
-	}
+	
 
 	public String getRole() {
 		return role;
@@ -55,14 +48,13 @@ public class User {
 
 	
 
-	public User(int id, String name, String email, String password, String role, int active, List<Post> posts) {
+	public User(int id, String name, String email, String password, String role, List<Post> posts) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.email = email;
 		this.password = password;
 		this.role = role;
-		this.active = active;
 		this.posts = posts;
 	}
 

@@ -25,7 +25,9 @@ public class Post {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
 	private String title;
+	@Column(length = 2000)
 	private String excerpt;
+	@Column(length = 5000)
 	private String content;
 	private String author;
 	@Column(name = "published_at")

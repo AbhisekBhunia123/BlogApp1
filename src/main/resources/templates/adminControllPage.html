@@ -1,144 +1,84 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html xmlns:th="http://www.thymeleaf.org">
 
 <head>
 	<meta charset="UTF-8">
 	<title>Insert title here</title>
 	<style>
-		/* Style for the container */
+		/* Apply styles to the main container */
 		.container {
-			max-width: 800px;
-			margin: 0 auto;
+			margin-top: 20px;
 		}
 
-		/* Style for the Publish and Draft buttons */
-		.text-center {
-			text-align: center;
-		}
-
-		.publishAndDraftBtn {
-			display: inline-block;
-			padding: 10px 20px;
-			background-color: #333;
-			color: #fff;
-			text-decoration: none;
-			border: none;
-			border-radius: 5px;
-			margin: 10px;
-			cursor: pointer;
-			transition: background-color 0.2s;
-		}
-
-		.publishAndDraftBtn:hover {
-			background-color: #555;
-			/* Highlight on hover */
-		}
-
-		/* Style for the card */
-		.card {
-			border: 1px solid #ddd;
-			border-radius: 5px;
-			background-color: #fff;
-			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-			margin-top: 10px;
-		}
-
-		/* Style for the card header */
+		/* Style the card header */
 		.card-header {
-			background-color: #333;
+			background-color: #007BFF;
 			color: #fff;
-			padding: 10px;
-			border-radius: 5px 5px 0 0;
 			text-align: center;
-		}
-
-		/* Style for the author and createdAt */
-		.card-header p {
-			font-size: 16px;
-			margin: 5px 0;
-		}
-
-		/* Style for the card body */
-		.card-body {
 			padding: 10px;
 		}
 
-		/* Style for the card title */
+		/* Style the card title */
 		.card-title {
 			font-size: 24px;
 			font-weight: bold;
 			margin: 10px 0;
 		}
 
-		/* Style for the card content */
+		/* Style the card text */
 		.card-text {
 			font-size: 16px;
 		}
 
-		/* Style for form elements */
-		form {
-			margin: 10px 0;
+		/* Style the form elements within the card */
+		.form-control {
+			margin-bottom: 10px;
 		}
 
-		input[type="text"] {
-			width: 100%;
-			padding: 10px;
-			border: 1px solid #ddd;
-			border-radius: 5px;
+		/* Style the buttons */
+		.btn {
+			margin-right: 10px;
 		}
 
-		button {
-			background-color: #333;
-			color: #fff;
-			border: none;
-			padding: 10px 20px;
-			border-radius: 5px;
-			cursor: pointer;
-			transition: background-color 0.2s;
-		}
-
-		button:hover {
-			background-color: #555;
-			/* Highlight on hover */
-		}
-
-		/* Style for the comments section */
+		/* Style the collapsed comment section */
 		.collapse {
-			margin: 20px 0;
+			margin-top: 10px;
 		}
 
-		/* Style for comment name and email */
-		.collapse span {
-			font-size: 14px;
+		/* Style the comment user info */
+		span {
 			font-weight: bold;
-			margin: 5px 0;
 		}
 
-		/* Style for the comment content */
-		.collapse p {
-			font-size: 16px;
-			margin: 5px 0;
+		/* Add more custom styles as needed */
+
+		/* Adjust text area styling */
+		.postField {
+			width: 100%;
 		}
 
-		hr {
-			border: 1px solid #ddd;
-			margin: 10px 0;
+		/* Center the title */
+		.card-header p {
+			text-align: center;
 		}
 
-		/* Additional styles can be added as needed */
+		/* Adjust form field styling */
+		.form-control.title {
+			height: auto;
+		}
+
+		/* Center the buttons in the container */
+		.container>button {
+			display: block;
+			margin: 0 auto;
+		}
 	</style>
 </head>
 
 <body>
 	<div class="container">
 		<div class="container mt-4">
-			<div class="container text-center">
-				<a class="publishAndDraftBtn"
-					th:href="@{/account/publishedpost/{id}(id=${#authentication.name})}">Published</a>
-				<a class="publishAndDraftBtn"
-					th:href="@{/account/draftedpost/{id}(id=${#authentication.name})}">Draft</a>
-			</div>
-			<div th:each="post : ${posts}">
+			<div>
 				<div class="card mt-2">
 					<div class="card-header">
 						<p th:text="${post.author}"></p>
@@ -150,7 +90,31 @@
 						<div th:each="tag : ${post.tags}">
 							<p th:text="${tag.name}"></p>
 						</div>
-						<p data-bs-toggle="modal" data-bs-target="#exampleModal">Make a comment</p>
+
+						<form id="myForm" th:action="@{/account/updateblog}" method="post">
+							<div class="mb-3">
+								<textarea type="text" class="form-control postField title" id="exampleInputEmail1"
+									aria-describedby="emailHelp" placeholder="Title" name="title" style="height: 50px;"
+									th:if="${post != null}" th:value="${post.title}" th:text="${post.title}"></textarea>
+							</div>
+							<hr />
+							<div class="mb-3">
+								<textarea class "form-control postField" placeholder="Write your content here"
+									id="content" style="height: 500px" name="content" th:if="${post != null}"
+									th:value="${post.content}" th:text="${post.content}"></textarea>
+							</div>
+							<div class="mb-3">
+								<textarea class="form-control postField" placeholder="Give an excerpt here"
+									id="floatingTextarea2" style="height: 100px" name="excerpt" th:if="${post != null}"
+									th:value="${post.excerpt}" th:text="${post.excerpt}"></textarea>
+							</div>
+							<input type="hidden" name="authorEmail" value="none" />
+							<input type="hidden" th:if="${post != null}" th:value="${post.id}" name="postId" />
+							<div class="container" th:if="${post != null}">
+								<button class="btn btn-warning" id="saveButton">Save Post</button>
+							</div>
+
+						</form>
 
 						<form th:action="@{/account/createtag}" method="post">
 							<h1>Tag Name</h1>
@@ -203,7 +167,6 @@
 			</div>
 		</div>
 	</div>
-
 </body>
 
 </html>

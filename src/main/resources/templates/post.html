@@ -74,7 +74,7 @@
 <body>
 	<div class="container">
 		<div class="container mt-4">
-			<form>
+			<form id="myForm" th:action="@{/account/updateblog}" method="post">
 				<div class="mb-3">
 					<textarea type="text" class="form-control postField title" id="exampleInputEmail1"
 						aria-describedby="emailHelp" placeholder="Title" name="title" style="height: 50px;"
@@ -87,33 +87,51 @@
 				<div class="mb-3">
 					<textarea class="form-control postField" placeholder="Write your content here" id="content"
 						style="height: 500px" name="content" th:if="${post == null}"></textarea>
-					<textarea class="form-control postField" placeholder="Write your content here" id="content"
+					<textarea class "form-control postField" placeholder="Write your content here" id="content"
 						style="height: 500px" name="content" th:if="${post != null}" th:value="${post.content}"
 						th:text="${post.content}"></textarea>
 				</div>
 				<div class="mb-3">
-					<textarea class="form-control postField" placeholder="Give a excerpt here" id="floatingTextarea2"
+					<textarea class="form-control postField" placeholder="Give an excerpt here" id="floatingTextarea2"
 						style="height: 100px" name="excerpt" th:if="${post == null}"></textarea>
-					<textarea class="form-control postField" placeholder="Give a excerpt here" id="floatingTextarea2"
+					<textarea class="form-control postField" placeholder="Give an excerpt here" id="floatingTextarea2"
 						style="height: 100px" name="excerpt" th:if="${post != null}" th:value="${post.excerpt}"
 						th:text="${post.excerpt}"></textarea>
 				</div>
+				<div class="mb-3" th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">
+					<textarea type="text" class="form-control postField title" id="exampleInputEmail1"
+						aria-describedby="emailHelp" placeholder="Enter author email if you want" name="authorEmail"
+						style="height: 50px;" th:if="${post == null}"></textarea>
+				</div>
+				<input type="hidden" name="authorEmail" value="none"
+					th:unless="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}" />
 				<div class="container" th:if="${post == null}">
-					<button class="btn btn-outline-success" type="submit" formaction="/publishpost"
-						formmethod="post">Publish</button>
-					<button class="btn btn-outline-warning" type="submit" formaction="/createpost"
-						formmethod="post">Draft</button>
+					<button class="btn btn-outline-success" id="publishButton">Publish</button>
+					<button class="btn btn-outline-warning" id="draftButton">Draft</button>
 				</div>
 				<input type="hidden" th:if="${post != null}" th:value="${post.id}" name="postId" />
 				<div class="container" th:if="${post != null}">
-					<button class="btn btn-warning" type="submit" formaction="/updateblog"
-						formmethod="post">Save</button>
+					<button class="btn btn-warning" id="saveButton" type="submit">Save</button>
 				</div>
 
 			</form>
 		</div>
-
 	</div>
+
+	<script>
+		document.getElementById("publishButton").addEventListener("click", function () {
+			let form = document.getElementById("myForm");
+			form.action = "/account/publishpost";
+			form.submit();
+		});
+
+		document.getElementById("draftButton").addEventListener("click", function () {
+			let form = document.getElementById("myForm");
+			form.action = "/account/createpost";
+			form.submit();
+		});
+
+	</script>
 </body>
 
 </html>

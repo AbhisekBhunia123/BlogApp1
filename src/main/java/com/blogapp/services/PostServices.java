@@ -15,8 +15,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import com.blogapp.dao.PostDao;
 import com.blogapp.entities.Post;
-import com.blogapp.entities.Tag;
 import com.blogapp.entities.User;
 import com.blogapp.repositories.PostRepo;
 import com.blogapp.repositories.TagRepo;
@@ -34,13 +34,17 @@ public class PostServices {
 	@Autowired
 	UserRepo userRepo;
 
-	public boolean createPost(String title, String content, String excerpt) {
+	@Autowired
+	PostDao postDao;
+
+	public boolean createPost(String title, String content, String excerpt, String email) {
 		boolean isCreated = false;
+		Date createdAt = new Date();
+		Date updatedAt = new Date();
 		try {
-			Date createdAt = new Date();
-			Date updatedAt = new Date();
+			User user = userRepo.findByEmail(email);
 			Post post = new Post();
-			post.setAuthor("Abhisek");
+			post.setAuthor(user.getName());
 			post.setContent(content);
 			post.setTitle(title);
 			post.setExcerpt(excerpt);
@@ -48,7 +52,6 @@ public class PostServices {
 			post.setPublishedAt(null);
 			post.setCreatedAt(createdAt);
 			post.setUpdatedAt(updatedAt);
-			User user = userRepo.findById(352).get();
 			post.setUser(user);
 			postRepo.save(post);
 			isCreated = true;
@@ -59,24 +62,44 @@ public class PostServices {
 
 	}
 
-	public boolean publishPost(String title, String content, String excerpt) {
+	public boolean publishPost(String title, String content, String excerpt, String email, boolean isAdmin,
+			String authorEmail) {
 		boolean isCreated = false;
 		Date createdAt = new Date();
 		Date updatedAt = new Date();
 		Date publishedAt = new Date();
 		try {
-			Post post = new Post();
-			post.setAuthor("Abhisek Bhunia");
-			post.setContent(content);
-			post.setTitle(title);
-			post.setExcerpt(excerpt);
-			post.setIsPublished("yes");
-			post.setPublishedAt(publishedAt);
-			post.setCreatedAt(createdAt);
-			post.setUpdatedAt(updatedAt);
-			User user = userRepo.findById(352).get();
-			post.setUser(user);
-			postRepo.save(post);
+			if (isAdmin) {
+				User hasExistUser = userRepo.findByEmail(authorEmail);
+				if (hasExistUser == null) {
+					return false;
+				}
+				Post post = new Post();
+				post.setAuthor(hasExistUser.getName());
+				post.setContent(content);
+				post.setTitle(title);
+				post.setExcerpt(excerpt);
+				post.setIsPublished("yes");
+				post.setPublishedAt(publishedAt);
+				post.setCreatedAt(createdAt);
+				post.setUpdatedAt(updatedAt);
+				post.setUser(hasExistUser);
+				postRepo.save(post);
+			} else {
+				User user = userRepo.findByEmail(email);
+				Post post = new Post();
+				post.setAuthor(user.getName());
+				post.setContent(content);
+				post.setTitle(title);
+				post.setExcerpt(excerpt);
+				post.setIsPublished("yes");
+				post.setPublishedAt(publishedAt);
+				post.setCreatedAt(createdAt);
+				post.setUpdatedAt(updatedAt);
+				post.setUser(user);
+				postRepo.save(post);
+			}
+
 			isCreated = true;
 		} catch (Exception e) {
 			System.out.println(e);
@@ -136,14 +159,16 @@ public class PostServices {
 	}
 
 	public Set<Post> filterPost(String[] authors, String[] tags, String startDate, String endDate, int pageNo,
-			int pageSize) {
-		ArrayList<String> authorsList = new ArrayList<>();
-		List<String> tagsList = new ArrayList<>();
+			int pageSize, String searchText) {
 		Set<Post> posts = new HashSet<>();
+		searchText = searchText.trim();
+		List<String> authorsList = null;
+		List<String> tagsList = null;
 		Pageable pageble = PageRequest.of(pageNo - 1, pageSize);
 		Date strtDate = null;
 		Date eDate = null;
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		System.out.println(searchText);
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 		if (startDate.length() != 0 && endDate.length() != 0) {
 			try {
 				startDate = startDate + " 00:00:00.000";
@@ -156,73 +181,28 @@ public class PostServices {
 		}
 
 		if (authors != null) {
+			authorsList = new ArrayList<>();
 			for (String author : authors) {
 				authorsList.add(author);
 			}
 		}
 		if (tags != null) {
+			tagsList = new ArrayList<>();
 			for (String tag : tags) {
 				tagsList.add(tag);
 			}
 		}
-		Page<Post> authorposts = null;
-		Page<Tag> tagPosts = null;
-		if (authorsList.size() != 0 && tagsList.size() == 0 && startDate.length() == 0 && endDate.length() == 0) {
-			authorposts = postRepo.findByAuthorIn(authorsList, pageble);
-			posts.addAll(authorposts.getContent());
-		} else if (authorsList.size() == 0 && tagsList.size() != 0 && startDate.length() == 0
-				&& endDate.length() == 0) {
-			tagPosts = tagRepo.findByTagNamesIn(tagsList, pageble);
-			for (Tag tag : tagPosts.getContent()) {
-				posts.addAll(tag.getPosts());
-			}
-		} else if (authorsList.size() == 0 && tagsList.size() == 0 && startDate.length() != 0
-				&& endDate.length() != 0) {
-			authorposts = postRepo.findByCreatedAtBetween(strtDate, eDate, pageble);
-			posts.addAll(authorposts.getContent());
-			System.out.println("Hi");
-		} else if (authorsList.size() != 0 && tagsList.size() == 0 && startDate.length() != 0
-				&& endDate.length() != 0) {
-			authorposts = postRepo.findByAuthorInAndCreatedAtBetween(authorsList, strtDate, eDate, pageble);
-			posts.addAll(authorposts.getContent());
-		} else if (authorsList.size() != 0 && tagsList.size() != 0 && startDate.length() != 0
-				&& endDate.length() != 0) {
-			Page<Post> filterPostByDate = postRepo.findByCreatedAtBetween(strtDate, eDate, pageble);
-			for (Post post : filterPostByDate.getContent()) {
-				for (Tag tag : post.getTags()) {
-					if (tagsList.contains(tag.getName()) && authorsList.contains(post.getAuthor())) {
-						posts.add(post);
-					}
-				}
-			}
-		} else if (authorsList.size() == 0 && tagsList.size() != 0 && startDate.length() != 0
-				&& endDate.length() != 0) {
-			Page<Post> filterPostByDate = postRepo.findByCreatedAtBetween(strtDate, eDate, pageble);
-			for (Post post : filterPostByDate.getContent()) {
-				for (Tag tag : post.getTags()) {
-					if (tagsList.contains(tag.getName())) {
-						posts.add(post);
-					}
-				}
-			}
-		} else if (authorsList.size() != 0 && tagsList.size() != 0 && startDate.length() == 0
-				&& endDate.length() == 0) {
-			authorposts = postRepo.filterByTagNameAndAuthor(authorsList, tagsList, pageble);
-			posts.addAll(authorposts.getContent());
+		System.out.println(strtDate);
+		if (searchText.length() == 0) {
+			String searchTexts[] = null;
+			posts = postDao.filterBySearch(authors, tags, startDate, endDate, pageNo, pageSize, authorsList, tagsList,
+					pageble, strtDate, eDate, searchTexts);
+		} else if (searchText != null) {
+			String searchTexts[] = searchText.split(" ");
+			posts = postDao.filterBySearch(authors, tags, startDate, endDate, pageNo, pageSize, authorsList, tagsList,
+					pageble, strtDate, eDate, searchTexts);
 		}
 		return posts;
-	}
-
-	public Set<Post> searchPost(String searchText) {
-		searchText = searchText.trim();
-		String searchTexts[] = searchText.split(" ");
-		Set<Post> searchPosts = new HashSet<>();
-		for (String text : searchTexts) {
-			List<Post> postsBySearch = postRepo.findFromSearch(text);
-			searchPosts.addAll(postsBySearch);
-		}
-
-		return searchPosts;
 	}
 
 	public Set<Post> searchPostPage(String searchText, int pageNo, int pageSize) {
@@ -231,10 +211,9 @@ public class PostServices {
 		Set<Post> searchPosts = new HashSet<>();
 		Pageable pageble = PageRequest.of(pageNo - 1, pageSize);
 		for (String text : searchTexts) {
-			Page<Post> postsBySearch = postRepo.findFromSearchPage(pageble, text);
+			Page<Post> postsBySearch = postRepo.searchByTitleAuthorTagsContent(text, pageble);
 			searchPosts.addAll(postsBySearch.getContent());
 		}
-
 		return searchPosts;
 	}
 
@@ -243,10 +222,10 @@ public class PostServices {
 		Page<Post> sortedPost = null;
 		if (sortType.equals("asc")) {
 			pageable = PageRequest.of(pageNo - 1, pageSize, Sort.by(Sort.Direction.ASC, "publishedAt"));
-			sortedPost = postRepo.findAllByOrderByCreatedAtAsc(pageable);
+			sortedPost = postRepo.findAllByisPublishedOrderByCreatedAtAsc("yes", pageable);
 		} else {
 			pageable = PageRequest.of(pageNo - 1, pageSize, Sort.by(Sort.Direction.DESC, "publishedAt"));
-			sortedPost = postRepo.findAllByOrderByCreatedAtDesc(pageable);
+			sortedPost = postRepo.findAllByisPublishedOrderByCreatedAtDesc("yes", pageable);
 		}
 
 		return sortedPost;

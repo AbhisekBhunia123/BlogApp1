@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
 	<meta charset="UTF-8">
@@ -9,102 +9,84 @@
 
 <body>
 
-	<nav class="navbar navbar-expand-lg navbar-light bg-light" th:fragment="navbar(user)">
-		<div class="container-fluid">
-			<a class="navbar-brand" href="#">Navbar</a>
-			<button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-				data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-				aria-label="Toggle navigation">
-				<span class="navbar-toggler-icon"></span>
-			</button>
-			<div class="collapse navbar-collapse" id="navbarSupportedContent">
-				<ul class="navbar-nav me-auto mb-2 mb-lg-0">
-					<li class="nav-item">
-						<a class="nav-link active" aria-current="page" href="#">Home</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="#">Link</a>
-					</li>
-					<li class="nav-item dropdown">
-						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-							data-bs-toggle="dropdown" aria-expanded="false">
-							Filter
-						</a>
-						<ul class="dropdown-menu bg-dark" aria-labelledby="navbarDropdown">
-							<div class="container">
-								<form action="/homefilter" method="post">
-									<div class="mb-3">
-										<label for="exampleInputPassword1" class="form-label text-light">Author</label>
-										<input type="text" class="form-control" id="exampleInputPassword1"
-											name="author">
-									</div>
-									<div class="mb-3">
-										<label for="exampleInputPassword1" class="form-label text-light">Date</label>
-										<input type="text" class="form-control" id="exampleInputPassword1" name="date">
-									</div>
-									<div class="mb-3">
-										<label for="exampleInputPassword1" class="form-label text-light">Tag</label>
-										<input type="text" class="form-control" id="exampleInputPassword1" name="tag">
-									</div>
-									<button class="btn btn-primary filterbtn">Filter</button>
-								</form>
-							</div>
+	<!--new navbar code-->
+	<nav class="nav" th:fragment="navbar(authors,tags,searchText,user)">
+		<div class="ProjectName">
+			<h1>This is My project</h1>
+		</div>
+		<div class="searchDiv">
+			<form th:action="@{/search}">
+				<input type="hidden" name="pageNo" value="1" />
+				<input type="text" name="search" />
+			</form>
 
-						</ul>
-					</li>
-					<li class="nav-item dropdown">
-						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-							data-bs-toggle="dropdown" aria-expanded="false">
-							Sort By Date
-						</a>
-						<ul class="dropdown-menu bg-dark" aria-labelledby="navbarDropdown">
-							<li>
-								<div class="container">
-									<form action="/sortpost" method="get">
-										<div class="form-check">
-											<input class="form-check-input" type="radio" name="sortValue"
-												id="flexRadioDefault1" value="asc" checked>
-											<label class="form-check-label text-light" for="flexRadioDefault1">
-												Sort By ASC
-											</label>
-										</div>
-										<div class="form-check">
-											<input class="form-check-input" type="radio" name="sortValue"
-												id="flexRadioDefault2" value="desc">
-											<label class="form-check-label text-light" for="flexRadioDefault2">
-												Sort By Desc
-											</label>
-										</div>
-										<button type="submit" class="btn btn-success filterbtn">Sort</button>
-									</form>
-								</div>
+		</div>
+		<div class="filterDiv">
+			<form th:action="@{/homefilter}" method="post">
+				<input type="hidden" name="pageNo" value="1" />
+				<input type="hidden" name="searchText" th:value="${searchText}" />
+				<h2>Select Authors:</h2>
+				<div th:each="author :${authors}">
+					<label>
+						<input type="checkbox" name="authors" th:value="${author}" th:text="${author}">
+						<br>
+					</label>
+				</div>
 
-							</li>
+				<h2>Select Tags:</h2>
+				<div th:each="tag :${tags}">
+					<label>
+						<input type="checkbox" name="tags" th:value="${tag}" th:text="${tag}">
+						<br>
+					</label>
+				</div>
 
-						</ul>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" th:href="@{/publishedpost/{id}(id=${user.id})}"
-							th:if="${user}">WorkSpace</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" th:href="@{/post}"
-							th:if="${user}">Write</a>
-					</li>
-				</ul>
-				<form action="/blog" method="get" class="d-flex">
-					<input class="form-control me-2" type="text" placeholder="Search" aria-label="Search" name="search">
-					<button class="btn btn-outline-success" type="submit">Search</button>
-				</form>
-
-				<button class="btn btn-outline-primary registerBtn" data-bs-toggle="modal"
-					data-bs-target="#registerModal" th:if="${user == null}">Regiser</button>
-				<button class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#loginModal"
-					th:if="${user == null}">Login</button>
-			</div>
+				<h1>Select Date</h1>
+				<p>Start Date</p>
+				<input type="date" name="startDate" />
+				<p>End Date</p>
+				<input type="date" name="endDate" />
+				<br>
+				<br>
+				<input type="submit" value="Apply Filter">
+			</form>
+		</div>
+		<div class="sortDiv">
+			<form th:action="@{/sortpost}" method="get">
+				<div class="form-check">
+					<input class="form-check-input" type="radio" name="sortValue" id="flexRadioDefault1" value="asc"
+						checked>
+					<label class="form-check-label text-light" for="flexRadioDefault1">
+						Sort By ASC
+					</label>
+				</div>
+				<div class="form-check">
+					<input class="form-check-input" type="radio" name="sortValue" id="flexRadioDefault2" value="desc">
+					<label class="form-check-label text-light" for="flexRadioDefault2">
+						Sort By Desc
+					</label>
+				</div>
+				<input type="hidden" name="pageNo" value="1" />
+				<button type="submit" class="btn btn-success filterbtn">Sort</button>
+			</form>
+		</div>
+		<div class="RegisterAndLoginDiv" sec:authorize="!isAuthenticated()">
+			<a href="/register"><button>Register</button></a>
+		</div>
+		<div class="LoginDiv" sec:authorize="!isAuthenticated()">
+			<a href="/showLoginPage"><button>Login</button></a>
+		</div>
+		<div class="LogOutDiv">
+			<form th:action="@{/account/logout}" method="post" sec:authorize="isAuthenticated()">
+				<button type="submit">Logout</button>
+			</form>
+		</div>
+		<div>
+			<a sec:authorize="isAuthenticated()" th:href="@{/account/post}">write</a>
+			<a sec:authorize="isAuthenticated()"
+				th:href="@{/account/publishedpost/{id}(id=${#authentication.name})}">WorkSpace</a>
 		</div>
 	</nav>
-	
 
 </body>
 

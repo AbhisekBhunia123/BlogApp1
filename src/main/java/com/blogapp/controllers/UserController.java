@@ -17,15 +17,18 @@ public class UserController {
 	@PostMapping("/register")
 	public String registerUser(@RequestParam("name") String name, @RequestParam("email") String email,
 			@RequestParam("password") String password) {
+		if (userService.findByEmail(email) != null) {
+			return "redirect:/register";
+		}
 		boolean isSaved = userService.registerUser(name, email, password);
 		if (isSaved) {
-			return "redirect:/login";
+			return "redirect:/showLoginPage";
 		}
 		return "redirect:/register";
 	}
 
 	@PostMapping("/login")
-	public String userLogin(Model model, @RequestParam("email") String email,
+	public String userLogin(Model model, @RequestParam("username") String email,
 			@RequestParam("password") String password) {
 		User user = userService.AuthenticateUser(email, password);
 		if (user != null) {
